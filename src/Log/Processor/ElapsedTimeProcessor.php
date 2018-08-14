@@ -30,11 +30,13 @@ class ElapsedTimeProcessor
     }
 
     /**
+     * Add elapsed time to the log extra fields
+     *
      * @param array $record
      *
      * @return array
      */
-    public function __invoke(array $record)
+    public function __invoke(array $record): array
     {
         $dateTimeDiff = $this->startTime->diff(new \DateTimeImmutable());
 
