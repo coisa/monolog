@@ -209,4 +209,16 @@ class ConfigProvider
 
         return $this->getDefinissionsClasses($definitions);
     }
+
+    /**
+     * Return all processor definition mapping
+     *
+     * @return array
+     */
+    public function getProcessors(): array
+    {
+        $definitions = $this->getProcessorsDefinitions();
+
+        return $this->getDefinissionsClasses($definitions);
+    }
 }

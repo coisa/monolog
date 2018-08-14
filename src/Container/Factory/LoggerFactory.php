@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace CoiSA\Monolog\Container\Factory;
 
+use CoiSA\Monolog\ConfigProvider;
 use Monolog\Handler\HandlerInterface;
 use Monolog\Handler\NullHandler;
 use Monolog\Logger;
@@ -65,9 +66,36 @@ class LoggerFactory
         $logger = new Logger($this->name);
         $logger->pushHandler($handler);
 
+        $this->pushProcessors($container, $logger);
+
         // Alternative access to logger **not encouraged**
         Registry::addLogger($logger);
 
         return $logger;
+    }
+
+    /**
+     * Set logger processors
+     *
+     * @param ContainerInterface $container
+     * @param Logger $logger
+     */
+    private function pushProcessors(ContainerInterface $container, Logger $logger): void
+    {
+        try {
+            $configProvider = $container->get(ConfigProvider::class);
+        } catch (ContainerExceptionInterface $exception) {
+            return;
+        }
+
+        foreach ($configProvider->getProcessors() as $processorClass) {
+            try {
+                $processor = $container->get($processorClass);
+            } catch (ContainerExceptionInterface $exception) {
+                continue;
+            }
+
+            $logger->pushProcessor($processor);
+        }
     }
 }
