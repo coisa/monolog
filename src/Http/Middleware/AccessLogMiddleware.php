@@ -1,7 +1,11 @@
 <?php
+
 /**
  * @author Felipe Sayão Lobato Abreu <contato@felipeabreu.com.br>
+ * @package CoiSA\Monolog\Http\Middleware
  */
+
+declare(strict_types=1);
 
 namespace CoiSA\Monolog\Http\Middleware;
 
