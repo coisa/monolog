@@ -52,11 +52,10 @@ class AccessLogMiddleware implements MiddlewareInterface
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $logger = $this->configure($request, $this->logger);
-
-        $logger->info('Request', compact('request'));
         $response = $handler->handle($request);
-        $logger->info('Response', compact('response'));
+
+        $logger = $this->configure($request, $this->logger);
+        $logger->info($request->getRequestTarget(), compact('request', 'response'));
 
         return $response;
     }
