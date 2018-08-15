@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 namespace CoiSA\Monolog\Container\Factory;
 
-use CoiSA\Monolog\ConfigProvider;
+use CoiSA\Monolog\Container\ConfigProvider\ProcessorsConfigProvider;
 use Monolog\Handler\HandlerInterface;
 use Monolog\Handler\NullHandler;
 use Monolog\Logger;
@@ -51,7 +51,7 @@ class LoggerFactory
      *
      * @return Logger
      */
-    public function __invoke(ContainerInterface $container)
+    public function __invoke(ContainerInterface $container): Logger
     {
         try {
             $handler = $container->get(HandlerInterface::class);
@@ -83,12 +83,18 @@ class LoggerFactory
     private function pushProcessors(ContainerInterface $container, Logger $logger): void
     {
         try {
-            $configProvider = $container->get(ConfigProvider::class);
+            $configProvider = $container->get(ProcessorsConfigProvider::class);
         } catch (ContainerExceptionInterface $exception) {
             return;
         }
 
-        foreach ($configProvider->getProcessors() as $processorClass) {
+        $processors = array_merge(...array_values($configProvider->getDependencies()));
+
+        foreach (array_keys($processors) as $processorClass) {
+            if ($processorClass === ProcessorsConfigProvider::class) {
+                continue;
+            }
+
             try {
                 $processor = $container->get($processorClass);
             } catch (ContainerExceptionInterface $exception) {
