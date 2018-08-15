@@ -8,6 +8,7 @@
 namespace CoiSA\Monolog\Container\ConfigProvider;
 
 use CoiSA\Monolog\Container\Factory;
+use CoiSA\Monolog\Container\Initializer;
 use Monolog\Logger;
 use Monolog\Handler;
 use Psr\Log\LoggerInterface;
@@ -39,6 +40,9 @@ class LoggerConfigProvider
     public function getDependencies()
     {
         return [
+            'initializers' => [
+                Initializer\LoggerAwareInitializer::class
+            ],
             'services' => [
                 LoggerConfigProvider::class => $this
             ],
