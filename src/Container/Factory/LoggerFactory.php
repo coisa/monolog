@@ -55,11 +55,11 @@ class LoggerFactory
     {
         try {
             $handler = $container->get(HandlerInterface::class);
-        } catch (ContainerExceptionInterface $exception) {
-            $handler = new NullHandler();
-        }
 
-        if (!$handler instanceof HandlerInterface) {
+            if (!$handler instanceof HandlerInterface) {
+                $handler = $container->get(NullHandler::class);
+            }
+        } catch (ContainerExceptionInterface $exception) {
             $handler = new NullHandler();
         }
 
