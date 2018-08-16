@@ -26,7 +26,7 @@ class LeagueServiceProvider extends AbstractServiceProvider
      */
     public function provides(string $service): bool
     {
-        $dependencies = call_user_func_array('array_merge', $this->config->getDependencies());
+        $dependencies = array_merge(...array_values($this->config->getDependencies()));
 
         return array_key_exists($service, $dependencies);
     }
