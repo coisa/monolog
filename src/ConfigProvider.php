@@ -9,23 +9,25 @@ declare(strict_types=1);
 
 namespace CoiSA\Monolog;
 
-use CoiSA\Monolog\Container\Factory;
+use CoiSA\Monolog\Container\ConfigProvider\{
+    LoggerConfigProvider, StrategiesConfigProvider, HandlersConfigProvider, ProcessorsConfigProvider
+};
 use Monolog\Handler;
-use Monolog\Logger;
-use Monolog\Processor;
-use Psr\Log\LoggerInterface;
+use Zend\ConfigAggregator\{
+    ArrayProvider, ConfigAggregator
+};
 
 /**
  * Class ConfigProvider
  *
  * @package CoiSA\Monolog
  */
-class ConfigProvider
+final class ConfigProvider
 {
     /**
-     * @var string Default handler strategy
+     * @var ConfigAggregator Merged dependency mappings and configs
      */
-    private $strategy;
+    private $config;
 
     /**
      * ConfigProvider constructor.
@@ -34,7 +36,8 @@ class ConfigProvider
      */
     public function __construct(?string $strategy = Handler\GroupHandler::class)
     {
-        $this->setStrategy($strategy);
+        $providers = $this->getProviders($strategy);
+        $this->config = new ConfigAggregator($providers);
     }
 
     /**
@@ -44,9 +47,7 @@ class ConfigProvider
      */
     public function __invoke(): array
     {
-        return [
-            'dependencies' => $this->getDependencies()
-        ];
+        return $this->config->getMergedConfig();
     }
 
     /**
@@ -56,135 +57,9 @@ class ConfigProvider
      */
     public function getDependencies(): array
     {
-        return array_merge_recursive(
-            $this->getLoggerDefinitions(),
-            $this->getStrategiesDefinitions(),
-            $this->getHandlersDefinitions(),
-            $this->getProcessorsDefinitions()
-        );
-    }
+        $mergedConfig = $this->config->getMergedConfig();
 
-    /**
-     * Return dependency mappings for the Logger
-     *
-     * @return array
-     */
-    private function getLoggerDefinitions(): array
-    {
-        return [
-            'services'  => [
-                ConfigProvider::class => $this
-            ],
-            'aliases'   => [
-                'logger'               => Logger::class,
-                LoggerInterface::class => Logger::class,
-            ],
-            'factories' => [
-                Logger::class                   => Factory\LoggerFactory::class,
-                Handler\HandlerInterface::class => Factory\HandlerFactory::class,
-            ],
-        ];
-    }
-
-    /**
-     * Return dependency mappings for logging strategies
-     *
-     * @return array
-     */
-    private function getStrategiesDefinitions(): array
-    {
-        return [
-            'factories' => [
-                Handler\GroupHandler::class          => Factory\GroupHandlerFactory::class,
-                Handler\FingersCrossedHandler::class => Factory\FingersCrossedHandlerFactory::class,
-                Handler\BufferHandler::class         => Factory\BufferHandlerFactory::class,
-                Handler\DeduplicationHandler::class  => Factory\DeduplicationHandlerFactory::class,
-            ]
-        ];
-    }
-
-    /**
-     * Return dependency mappings for logger handlers
-     *
-     * @return array
-     */
-    private function getHandlersDefinitions(): array
-    {
-        return [
-            'invokables' => [
-                Handler\NullHandler::class           => Handler\NullHandler::class,
-                Handler\BrowserConsoleHandler::class => Handler\BrowserConsoleHandler::class,
-                Handler\ChromePHPHandler::class      => Handler\ChromePHPHandler::class,
-            ],
-            'factories'  => [
-                Handler\StreamHandler::class => Factory\StreamHandlerFactory::class,
-                Handler\SyslogHandler::class => Factory\SyslogHandlerFactory::class,
-                Handler\RedisHandler::class  => Factory\RedisHandlerFactory::class,
-                Handler\RavenHandler::class  => Factory\RavenHandlerFactory::class,
-            ],
-        ];
-    }
-
-    /**
-     * Return dependency mappings for logger processors
-     *
-     * @return array
-     */
-    private function getProcessorsDefinitions(): array
-    {
-        return [
-            'invokables' => [
-                Processor\PsrLogMessageProcessor::class   => Processor\PsrLogMessageProcessor::class,
-                Processor\UidProcessor::class             => Processor\UidProcessor::class,
-                Processor\ProcessIdProcessor::class       => Processor\ProcessIdProcessor::class,
-                Processor\MemoryUsageProcessor::class     => Processor\MemoryUsageProcessor::class,
-                Processor\MemoryPeakUsageProcessor::class => Processor\MemoryPeakUsageProcessor::class,
-                Processor\IntrospectionProcessor::class   => Processor\IntrospectionProcessor::class,
-                Processor\WebProcessor::class             => Processor\WebProcessor::class,
-            ]
-        ];
-    }
-
-    /**
-     * Returns defined classes on a container definition set.
-     *
-     * @param array $definitions
-     *
-     * @return array|mixed
-     */
-    private function getDefinissionsClasses(array $definitions)
-    {
-        $flatten = call_user_func_array('array_merge', $definitions);
-
-        return array_keys($flatten);
-    }
-
-    /**
-     * Set the default handler strategy.
-     * Set to null if you don't want handle log entries.
-     *
-     * @param string|null $handler Default handler strategy
-     *
-     * @return ConfigProvider
-     */
-    public function setStrategy(?string $handler): ConfigProvider
-    {
-        if ($handler === null) {
-            $handler = Handler\NullHandler::class;
-        }
-
-        $definitions = $this->getStrategiesDefinitions();
-        $strategies = $this->getDefinissionsClasses($definitions);
-
-        if (in_array($handler, $strategies)) {
-            $this->strategy = $handler;
-        }
-
-        if (!$this->strategy) {
-            $this->strategy = Handler\NullHandler::class;
-        }
-
-        return $this;
+        return $mergedConfig['dependencies'];
     }
 
     /**
@@ -194,18 +69,35 @@ class ConfigProvider
      */
     public function getStrategy()
     {
-        return $this->strategy;
+        $mergedConfig = $this->config->getMergedConfig();
+
+        return $mergedConfig[__CLASS__]['strategy'];
     }
 
     /**
-     * Return all handlers for the GroupHandler
+     * Returns collection of Config Providers to load
+     *
+     * @param null|string $strategy
      *
      * @return array
      */
-    public function getHandlers(): array
+    private function getProviders(?string $strategy): array
     {
-        $definitions = $this->getHandlersDefinitions();
-
-        return $this->getDefinissionsClasses($definitions);
+        return [
+            new ArrayProvider([
+                __CLASS__      => [
+                    'strategy' => $strategy
+                ],
+                'dependencies' => [
+                    'services' => [
+                        __CLASS__ => $this
+                    ]
+                ]
+            ]),
+            LoggerConfigProvider::class,
+            StrategiesConfigProvider::class,
+            HandlersConfigProvider::class,
+            ProcessorsConfigProvider::class,
+        ];
     }
 }

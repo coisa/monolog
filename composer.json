@@ -6,7 +6,9 @@
         "php": "^7.1",
         "psr/log": "^1.0",
         "psr/container": "^1.0",
-        "monolog/monolog": "^1.23"
+        "psr/http-server-middleware": "^1.0",
+        "monolog/monolog": "^1.23",
+        "zendframework/zend-config-aggregator": "^1.1"
     },
     "require-dev": {
         "rollbar/rollbar": "^1.5",

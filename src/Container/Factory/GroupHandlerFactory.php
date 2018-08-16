@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 namespace CoiSA\Monolog\Container\Factory;
 
-use CoiSA\Monolog\ConfigProvider;
+use CoiSA\Monolog\Container\ConfigProvider\HandlersConfigProvider;
 use Monolog\Handler\GroupHandler;
 use Monolog\Handler\HandlerInterface;
 use Monolog\Handler\NullHandler;
@@ -47,25 +47,29 @@ class GroupHandlerFactory
      */
     private function getHandlers(ContainerInterface $container): array
     {
+        $handlers = [
+            new NullHandler()
+        ];
+
         try {
-            $config = $container->get(ConfigProvider::class);
+            $configProvider = $container->get(HandlersConfigProvider::class);
         } catch (ContainerExceptionInterface $exception) {
-            return [NullHandler::class];
+            return $handlers;
         }
 
-        $handlers = [];
+        $dependencies = array_merge(...array_values($configProvider->getDependencies()));
 
-        foreach ($config->getHandlers() as $handler) {
-            $handler = $this->getHandler($container, $handler);
-
-            if ($handler instanceof NullHandler) {
-                continue;
-            }
-
-            $handlers[] = $handler;
+        foreach (array_keys($dependencies) as $handler) {
+            $handlers[] = $this->getHandler($container, $handler);
         }
 
-        return $handlers;
+        return array_filter(
+            $handlers,
+            function ($handler) {
+                return !($handler instanceof NullHandler);
+            },
+            ARRAY_FILTER_USE_BOTH
+        );
     }
 
     /**
@@ -80,11 +84,11 @@ class GroupHandlerFactory
     {
         try {
             $handler = $container->get($className);
-        } catch (ContainerExceptionInterface $exception) {
-            return new NullHandler();
-        }
 
-        if (!$handler instanceof HandlerInterface) {
+            if (!$handler instanceof HandlerInterface) {
+                return $container->get(NullHandler::class);
+            }
+        } catch (ContainerExceptionInterface $exception) {
             return new NullHandler();
         }
 

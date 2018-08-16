@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace CoiSA\Monolog\Container\Factory;
 
+use CoiSA\Monolog\Container\ConfigProvider\ProcessorsConfigProvider;
 use Monolog\Handler\HandlerInterface;
 use Monolog\Handler\NullHandler;
 use Monolog\Logger;
@@ -50,24 +51,57 @@ class LoggerFactory
      *
      * @return Logger
      */
-    public function __invoke(ContainerInterface $container)
+    public function __invoke(ContainerInterface $container): Logger
     {
         try {
             $handler = $container->get(HandlerInterface::class);
-        } catch (ContainerExceptionInterface $exception) {
-            $handler = new NullHandler();
-        }
 
-        if (!$handler instanceof HandlerInterface) {
+            if (!$handler instanceof HandlerInterface) {
+                $handler = $container->get(NullHandler::class);
+            }
+        } catch (ContainerExceptionInterface $exception) {
             $handler = new NullHandler();
         }
 
         $logger = new Logger($this->name);
         $logger->pushHandler($handler);
 
+        $this->pushProcessors($container, $logger);
+
         // Alternative access to logger **not encouraged**
         Registry::addLogger($logger);
 
         return $logger;
+    }
+
+    /**
+     * Set logger processors
+     *
+     * @param ContainerInterface $container
+     * @param Logger $logger
+     */
+    private function pushProcessors(ContainerInterface $container, Logger $logger): void
+    {
+        try {
+            $configProvider = $container->get(ProcessorsConfigProvider::class);
+        } catch (ContainerExceptionInterface $exception) {
+            return;
+        }
+
+        $processors = array_merge(...array_values($configProvider->getDependencies()));
+
+        foreach (array_keys($processors) as $processorClass) {
+            if ($processorClass === ProcessorsConfigProvider::class) {
+                continue;
+            }
+
+            try {
+                $processor = $container->get($processorClass);
+            } catch (ContainerExceptionInterface $exception) {
+                continue;
+            }
+
+            $logger->pushProcessor($processor);
+        }
     }
 }
