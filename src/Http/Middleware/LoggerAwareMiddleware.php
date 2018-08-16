@@ -9,12 +9,12 @@ declare(strict_types=1);
 
 namespace CoiSA\Monolog\Http\Middleware;
 
-use Monolog\Logger;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerInterface;
 
 /**
  * Class LoggerAwareMiddleware
@@ -24,16 +24,16 @@ use Psr\Log\LoggerAwareInterface;
 class LoggerAwareMiddleware implements MiddlewareInterface
 {
     /**
-     * @var Logger Monolog instance
+     * @var LoggerInterface Logger instance
      */
     private $logger;
 
     /**
      * LoggerAwareMiddleware constructor.
      *
-     * @param Logger $logger
+     * @param LoggerInterface $logger
      */
-    public function __construct(Logger $logger)
+    public function __construct(LoggerInterface $logger)
     {
         $this->logger = $logger;
     }
