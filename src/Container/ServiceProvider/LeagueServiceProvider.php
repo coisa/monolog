@@ -16,6 +16,8 @@ use Pimple\Container;
  * Class LeagueServiceProvider
  *
  * @package CoiSA\Monolog\Container\ServiceProvider
+ *
+ * @method \League\Container\Container getContainer
  */
 class LeagueServiceProvider extends AbstractServiceProvider
 {
