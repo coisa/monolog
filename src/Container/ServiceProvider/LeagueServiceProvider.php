@@ -5,6 +5,8 @@
  * @package CoiSA\Monolog\Container\ServiceProvider
  */
 
+declare(strict_types=1);
+
 namespace CoiSA\Monolog\Container\ServiceProvider;
 
 use League\Container\ServiceProvider\AbstractServiceProvider;

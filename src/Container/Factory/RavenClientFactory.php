@@ -5,6 +5,8 @@
  * @package CoiSA\Monolog\Container\Factory
  */
 
+declare(strict_types=1);
+
 namespace CoiSA\Monolog\Container\Factory;
 
 use Psr\Container\ContainerInterface;
