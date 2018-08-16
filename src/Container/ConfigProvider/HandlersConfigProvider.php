@@ -5,6 +5,8 @@
  * @package CoiSA\Monolog\Container\ConfigProvider
  */
 
+declare(strict_types=1);
+
 namespace CoiSA\Monolog\Container\ConfigProvider;
 
 use CoiSA\Monolog\Container\Factory;
@@ -37,8 +39,8 @@ class HandlersConfigProvider
     public function getDependencies()
     {
         return [
-            'services' => [
-                HandlersConfigProvider::class => $this
+            'services'   => [
+                __CLASS__ => $this
             ],
             'invokables' => [
                 Handler\NullHandler::class           => Handler\NullHandler::class,

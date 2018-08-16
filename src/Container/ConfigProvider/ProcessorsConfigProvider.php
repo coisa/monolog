@@ -5,6 +5,8 @@
  * @package CoiSA\Monolog\Container\ConfigProvider
  */
 
+declare(strict_types=1);
+
 namespace CoiSA\Monolog\Container\ConfigProvider;
 
 use CoiSA\Monolog\Log;
@@ -37,8 +39,8 @@ class ProcessorsConfigProvider
     public function getDependencies()
     {
         return [
-            'services' => [
-                ProcessorsConfigProvider::class => $this
+            'services'   => [
+                __CLASS__ => $this
             ],
             'invokables' => [
                 Processor\PsrLogMessageProcessor::class   => Processor\PsrLogMessageProcessor::class,
