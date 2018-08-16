@@ -9,8 +9,13 @@ declare(strict_types=1);
 
 namespace CoiSA\Monolog;
 
-use CoiSA\Monolog\Container;
+use CoiSA\Monolog\Container\ConfigProvider\{
+    LoggerConfigProvider, StrategiesConfigProvider, HandlersConfigProvider, ProcessorsConfigProvider
+};
 use Monolog\Handler;
+use Zend\ConfigAggregator\{
+    ArrayProvider, ConfigAggregator
+};
 
 /**
  * Class ConfigProvider
@@ -20,9 +25,9 @@ use Monolog\Handler;
 final class ConfigProvider
 {
     /**
-     * @var string Default handler strategy
+     * @var ConfigAggregator Merged dependency mappings and configs
      */
-    private $strategy;
+    private $config;
 
     /**
      * ConfigProvider constructor.
@@ -31,7 +36,8 @@ final class ConfigProvider
      */
     public function __construct(?string $strategy = Handler\GroupHandler::class)
     {
-        $this->strategy = $strategy;
+        $providers = $this->getProviders($strategy);
+        $this->config = new ConfigAggregator($providers);
     }
 
     /**
@@ -41,21 +47,7 @@ final class ConfigProvider
      */
     public function __invoke(): array
     {
-        $config = [
-            'dependencies' => [
-                'services'  => [
-                    ConfigProvider::class => $this
-                ]
-            ]
-        ];
-
-        return array_merge_recursive(
-            $config,
-            (new Container\ConfigProvider\LoggerConfigProvider)(),
-            (new Container\ConfigProvider\StrategiesConfigProvider)(),
-            (new Container\ConfigProvider\HandlersConfigProvider)(),
-            (new Container\ConfigProvider\ProcessorsConfigProvider)()
-        );
+        return $this->config->getMergedConfig();
     }
 
     /**
@@ -65,9 +57,9 @@ final class ConfigProvider
      */
     public function getDependencies(): array
     {
-        $config = $this->__invoke();
+        $mergedConfig = $this->config->getMergedConfig();
 
-        return $config['dependencies'];
+        return $mergedConfig['dependencies'];
     }
 
     /**
@@ -77,6 +69,35 @@ final class ConfigProvider
      */
     public function getStrategy()
     {
-        return $this->strategy;
+        $mergedConfig = $this->config->getMergedConfig();
+
+        return $mergedConfig[__CLASS__]['strategy'];
+    }
+
+    /**
+     * Returns collection of Config Providers to load
+     *
+     * @param null|string $strategy
+     *
+     * @return array
+     */
+    private function getProviders(?string $strategy): array
+    {
+        return [
+            new ArrayProvider([
+                __CLASS__      => [
+                    'strategy' => $strategy
+                ],
+                'dependencies' => [
+                    'services' => [
+                        __CLASS__ => $this
+                    ]
+                ]
+            ]),
+            LoggerConfigProvider::class,
+            StrategiesConfigProvider::class,
+            HandlersConfigProvider::class,
+            ProcessorsConfigProvider::class,
+        ];
     }
 }
