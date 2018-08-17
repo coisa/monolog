@@ -14,6 +14,7 @@ use Monolog\Handler\NullHandler;
 use Monolog\Handler\RavenHandler;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
+use Raven_Client;
 
 /**
  * Class RavenHandlerFactory
@@ -22,21 +23,6 @@ use Psr\Container\ContainerInterface;
  */
 class RavenHandlerFactory
 {
-    /**
-     * @var string Syslog identity name
-     */
-    private $identity;
-
-    /**
-     * SyslogHandlerFactory constructor.
-     *
-     * @param string|null $identity
-     */
-    public function __construct(string $identity = null)
-    {
-        $this->identity = $identity ?: gethostname();
-    }
-
     /**
      * Raven handler service factory
      *
@@ -47,7 +33,7 @@ class RavenHandlerFactory
     public function __invoke(ContainerInterface $container): HandlerInterface
     {
         try {
-            $client = $container->get('Raven_Client');
+            $client = $container->get(Raven_Client::class);
         } catch (ContainerExceptionInterface $exception) {
             return new NullHandler();
         }
