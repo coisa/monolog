@@ -39,7 +39,7 @@ class GroupHandlerFactory
     }
 
     /**
-     * Returns the handlers collection to group in a single GroupHandler
+     * Returns the handlers collection to group into a single GroupHandler
      *
      * @param ContainerInterface $container
      *

@@ -1,7 +1,34 @@
 {
     "name": "coisa/monolog",
-    "description": "Monolog Container Config Provider",
+    "description": "PSR-11 Monolog container config provider",
+    "license": "Apache-2.0",
     "type": "library",
+    "keywords": [
+        "monolog",
+        "logger",
+        "psr-3",
+        "container",
+        "psr-11",
+        "middleware",
+        "psr-15",
+        "expressive",
+        "zf",
+        "zendframework",
+        "pimple",
+        "servicemanager",
+        "phalcon"
+    ],
+    "authors": [
+        {
+            "name": "Felipe Sayão Lobato Abreu",
+            "email": "contato@felipeabreu.com.br"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/coisa/monolog/issues",
+        "source": "https://github.com/coisa/monolog",
+        "rss": "https://github.com/coisa/monolog/releases.atom"
+    },
     "require": {
         "php": "^7.1",
         "psr/log": "^1.0",
@@ -17,13 +44,6 @@
         "zendframework/zend-servicemanager": "^3.3",
         "league/container": "^3.2"
     },
-    "license": "Apache-2.0",
-    "authors": [
-        {
-            "name": "Felipe Sayão Lobato Abreu",
-            "email": "contato@felipeabreu.com.br"
-        }
-    ],
     "autoload": {
         "psr-4": {
             "CoiSA\\Monolog\\": "src/"

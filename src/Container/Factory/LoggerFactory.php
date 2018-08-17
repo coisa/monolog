@@ -53,17 +53,9 @@ class LoggerFactory
      */
     public function __invoke(ContainerInterface $container): Logger
     {
-        try {
-            $handler = $container->get(HandlerInterface::class);
-
-            if (!$handler instanceof HandlerInterface) {
-                $handler = $container->get(NullHandler::class);
-            }
-        } catch (ContainerExceptionInterface $exception) {
-            $handler = new NullHandler();
-        }
-
         $logger = new Logger($this->name);
+
+        $handler = $this->getHandler($container);
         $logger->pushHandler($handler);
 
         $this->pushProcessors($container, $logger);
@@ -103,5 +95,21 @@ class LoggerFactory
 
             $logger->pushProcessor($processor);
         }
+    }
+
+    /**
+     * @param ContainerInterface $container
+     *
+     * @return HandlerInterface
+     */
+    private function getHandler(ContainerInterface $container): HandlerInterface
+    {
+        try {
+            $handler = $container->get(HandlerInterface::class);
+        } catch (ContainerExceptionInterface $exception) {
+            $handler = new NullHandler();
+        }
+
+        return $handler;
     }
 }

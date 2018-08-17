@@ -31,6 +31,18 @@ class HandlerFactory
      */
     public function __invoke(ContainerInterface $container): HandlerInterface
     {
+        $strategy = $this->getStrategy($container);
+
+        return $this->getHandler($container, $strategy);
+    }
+
+    /**
+     * @param ContainerInterface $container
+     *
+     * @return string
+     */
+    private function getStrategy(ContainerInterface $container): string
+    {
         try {
             $configProvider = $container->get(ConfigProvider::class);
             $strategy = $configProvider->getStrategy();
@@ -42,15 +54,21 @@ class HandlerFactory
             $strategy = NullHandler::class;
         }
 
+        return $strategy;
+    }
+
+    /**
+     * @param ContainerInterface $container
+     * @param $strategy
+     *
+     * @return HandlerInterface
+     */
+    private function getHandler(ContainerInterface $container, $strategy): HandlerInterface
+    {
         try {
             $handler = $container->get($strategy);
-
-            if (!$handler instanceof HandlerInterface) {
-                return $container->get(NullHandler::class);
-            }
         } catch (ContainerExceptionInterface $exception) {
-            // Prevent application crashes
-            return new NullHandler();
+            $handler = new NullHandler();
         }
 
         return $handler;
