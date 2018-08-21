@@ -11,6 +11,7 @@ namespace CoiSA\Monolog\Container\ConfigProvider;
 
 use CoiSA\Monolog\Container\Factory;
 use Monolog\Handler;
+use Raven_Client;
 
 /**
  * Class HandlersConfigProvider
@@ -46,6 +47,7 @@ class HandlersConfigProvider
                 Handler\NullHandler::class           => Handler\NullHandler::class,
                 Handler\BrowserConsoleHandler::class => Handler\BrowserConsoleHandler::class,
                 Handler\ChromePHPHandler::class      => Handler\ChromePHPHandler::class,
+                Raven_Client::class                  => Raven_Client::class
             ],
             'factories'  => [
                 Handler\StreamHandler::class => Factory\StreamHandlerFactory::class,
