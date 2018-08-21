@@ -32,6 +32,10 @@ class RavenHandlerFactory
      */
     public function __invoke(ContainerInterface $container): HandlerInterface
     {
+        if (!class_exists(Raven_Client::class, false)) {
+            return new NullHandler();
+        }
+
         try {
             $client = $container->get(Raven_Client::class);
         } catch (ContainerExceptionInterface $exception) {
