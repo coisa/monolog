@@ -60,6 +60,9 @@ class GroupHandlerFactory
         $dependencies = array_merge(...array_values($configProvider->getDependencies()));
 
         foreach (array_keys($dependencies) as $handler) {
+            if (!$this->isHandler($handler)) {
+                continue;
+            }
             $handlers[] = $this->getHandler($container, $handler);
         }
 
@@ -84,14 +87,31 @@ class GroupHandlerFactory
     {
         try {
             $handler = $container->get($className);
-
-            if (!$handler instanceof HandlerInterface) {
-                return $container->get(NullHandler::class);
-            }
         } catch (ContainerExceptionInterface $exception) {
             return new NullHandler();
         }
 
         return $handler;
+    }
+
+    /**
+     * Check if a given class name belongs to a handler
+     *
+     * @param string $className Class name to verify if is a handler
+     *
+     * @return bool
+     */
+    private function isHandler(string $className): bool
+    {
+        $implements = @class_implements($className);
+        if (false === $implements) {
+            return false;
+        }
+
+        if (false === in_array(HandlerInterface::class, $implements)) {
+            return false;
+        }
+
+        return true;
     }
 }
