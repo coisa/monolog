@@ -80,7 +80,8 @@ class GitProcessor
         if (!isset($this->release)) {
             shell_exec('git fetch --tags 2> /dev/null');
 
-            $this->release = shell_exec('git tag | sort -r --version-sort | head -n1') ?: false;
+            $release = shell_exec('git tag | sort -r --version-sort | head -n1');
+            $this->release = $release ? trim($release, "\n") : false;
         }
 
         return $this->release ?: null;
