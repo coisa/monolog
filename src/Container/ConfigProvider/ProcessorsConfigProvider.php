@@ -50,6 +50,8 @@ class ProcessorsConfigProvider
                 Processor\MemoryPeakUsageProcessor::class => Processor\MemoryPeakUsageProcessor::class,
                 Processor\IntrospectionProcessor::class   => Processor\IntrospectionProcessor::class,
                 Processor\WebProcessor::class             => Processor\WebProcessor::class,
+                Processor\TagProcessor::class             => Processor\TagProcessor::class,
+                Processor\GitProcessor::class             => Log\Processor\GitProcessor::class,
                 Log\Processor\ElapsedTimeProcessor::class => Log\Processor\ElapsedTimeProcessor::class,
             ],
         ];
