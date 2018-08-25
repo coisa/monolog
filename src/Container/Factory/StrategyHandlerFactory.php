@@ -16,11 +16,11 @@ use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 
 /**
- * Class HandlerFactory
+ * Class StrategyHandlerFactory
  *
  * @package CoiSA\Monolog\Container\Factory
  */
-class HandlerFactory
+class StrategyHandlerFactory
 {
     /**
      * Default handler service factory
@@ -44,8 +44,8 @@ class HandlerFactory
     private function getStrategy(ContainerInterface $container): string
     {
         try {
-            $configProvider = $container->get(ConfigProvider::class);
-            $strategy = $configProvider->getStrategy();
+            $config = $container->get('config');
+            $strategy = $config[ConfigProvider::class]['strategy'] ?? ConfigProvider::LAZY;
         } catch (ContainerExceptionInterface $exception) {
             $strategy = null;
         }

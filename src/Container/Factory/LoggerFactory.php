@@ -14,8 +14,8 @@ use Monolog\Handler\HandlerInterface;
 use Monolog\Handler\NullHandler;
 use Monolog\Logger;
 use Monolog\Registry;
-use Psr\Container\ContainerInterface;
 use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\ContainerInterface;
 
 /**
  * Class LoggerFactory
@@ -75,14 +75,12 @@ class LoggerFactory
     private function pushProcessors(ContainerInterface $container, Logger $logger): void
     {
         try {
-            $configProvider = $container->get(ProcessorsConfigProvider::class);
+            $config = $container->get('config');
         } catch (ContainerExceptionInterface $exception) {
             return;
         }
 
-        $processors = array_merge(...array_values($configProvider->getDependencies()));
-
-        foreach (array_keys($processors) as $processorClass) {
+        foreach ($config[ProcessorsConfigProvider::class] as $processorClass) {
             if ($processorClass === ProcessorsConfigProvider::class) {
                 continue;
             }

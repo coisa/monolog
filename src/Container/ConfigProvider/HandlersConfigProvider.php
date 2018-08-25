@@ -28,6 +28,7 @@ class HandlersConfigProvider
     public function __invoke(): array
     {
         return [
+            __CLASS__      => array_keys(array_merge(...array_values($this->getDependencies()))),
             'dependencies' => $this->getDependencies()
         ];
     }
@@ -40,14 +41,8 @@ class HandlersConfigProvider
     public function getDependencies()
     {
         return [
-            'services'   => [
-                __CLASS__ => $this
-            ],
             'invokables' => [
-                Handler\NullHandler::class           => Handler\NullHandler::class,
-                Handler\BrowserConsoleHandler::class => Handler\BrowserConsoleHandler::class,
-                Handler\ChromePHPHandler::class      => Handler\ChromePHPHandler::class,
-                Raven_Client::class                  => Raven_Client::class
+                Raven_Client::class => Raven_Client::class
             ],
             'factories'  => [
                 Handler\StreamHandler::class => Factory\StreamHandlerFactory::class,

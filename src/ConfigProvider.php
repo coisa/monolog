@@ -24,6 +24,21 @@ use Zend\ConfigAggregator\{
  */
 final class ConfigProvider
 {
+    /** @const string Eager log entry write strategy */
+    const EAGER = Handler\GroupHandler::class;
+
+    /** @const string Waiting for an error log entry write strategy */
+    const OPTIMISTIC = Handler\FingersCrossedHandler::class;
+
+    /** @const string Lazy log entry write strategy. Writes only in the end of execution */
+    const LAZY = Handler\BufferHandler::class;
+
+    /** @const string Lazy log entry write strategy. Deduplicate log entries then write in the end of execution */
+    const DEDUPLICATED = Handler\DeduplicationHandler::class;
+
+    /** @const string NOT log entry at ALL! */
+    const DISABLED = Handler\NullHandler::class;
+
     /**
      * @var ConfigAggregator Merged dependency mappings and configs
      */
@@ -34,10 +49,19 @@ final class ConfigProvider
      *
      * @param string|null $strategy optional Default handler strategy
      */
-    public function __construct(?string $strategy = Handler\GroupHandler::class)
+    public function __construct(?string $strategy = self::EAGER)
     {
-        $providers = $this->getProviders($strategy);
-        $this->config = new ConfigAggregator($providers);
+        $this->config = new ConfigAggregator([
+            new ArrayProvider([
+                __CLASS__      => [
+                    'strategy' => $strategy
+                ],
+            ]),
+            LoggerConfigProvider::class,
+            StrategiesConfigProvider::class,
+            HandlersConfigProvider::class,
+            ProcessorsConfigProvider::class,
+        ]);
     }
 
     /**
@@ -60,44 +84,5 @@ final class ConfigProvider
         $mergedConfig = $this->config->getMergedConfig();
 
         return $mergedConfig['dependencies'];
-    }
-
-    /**
-     * Returns the default handler strategy
-     *
-     * @return string
-     */
-    public function getStrategy()
-    {
-        $mergedConfig = $this->config->getMergedConfig();
-
-        return $mergedConfig[__CLASS__]['strategy'];
-    }
-
-    /**
-     * Returns collection of Config Providers to load
-     *
-     * @param null|string $strategy
-     *
-     * @return array
-     */
-    private function getProviders(?string $strategy): array
-    {
-        return [
-            new ArrayProvider([
-                __CLASS__      => [
-                    'strategy' => $strategy
-                ],
-                'dependencies' => [
-                    'services' => [
-                        __CLASS__ => $this
-                    ]
-                ]
-            ]),
-            LoggerConfigProvider::class,
-            StrategiesConfigProvider::class,
-            HandlersConfigProvider::class,
-            ProcessorsConfigProvider::class,
-        ];
     }
 }

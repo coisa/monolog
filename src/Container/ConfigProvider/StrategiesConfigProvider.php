@@ -39,9 +39,6 @@ class StrategiesConfigProvider
     public function getDependencies()
     {
         return [
-            'services'  => [
-                __CLASS__ => $this
-            ],
             'factories' => [
                 Handler\GroupHandler::class          => Factory\GroupHandlerFactory::class,
                 Handler\FingersCrossedHandler::class => Factory\FingersCrossedHandlerFactory::class,

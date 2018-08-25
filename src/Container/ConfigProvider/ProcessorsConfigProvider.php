@@ -27,6 +27,7 @@ class ProcessorsConfigProvider
     public function __invoke(): array
     {
         return [
+            __CLASS__      => array_keys(array_merge(...array_values($this->getDependencies()))),
             'dependencies' => $this->getDependencies()
         ];
     }
@@ -39,9 +40,6 @@ class ProcessorsConfigProvider
     public function getDependencies()
     {
         return [
-            'services'   => [
-                __CLASS__ => $this
-            ],
             'invokables' => [
                 Processor\PsrLogMessageProcessor::class   => Processor\PsrLogMessageProcessor::class,
                 Processor\UidProcessor::class             => Processor\UidProcessor::class,

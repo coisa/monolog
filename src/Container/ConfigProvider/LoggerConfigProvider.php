@@ -11,8 +11,8 @@ namespace CoiSA\Monolog\Container\ConfigProvider;
 
 use CoiSA\Monolog\Container\Factory;
 use CoiSA\Monolog\Container\Initializer;
-use Monolog\Logger;
 use Monolog\Handler;
+use Monolog\Logger;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -51,7 +51,7 @@ class LoggerConfigProvider
             ],
             'factories'    => [
                 Logger::class                   => Factory\LoggerFactory::class,
-                Handler\HandlerInterface::class => Factory\HandlerFactory::class,
+                Handler\HandlerInterface::class => Factory\StrategyHandlerFactory::class,
             ],
             'initializers' => [
                 Initializer\LoggerAwareInitializer::class

@@ -52,14 +52,12 @@ class GroupHandlerFactory
         ];
 
         try {
-            $configProvider = $container->get(HandlersConfigProvider::class);
+            $config = $container->get('config');
         } catch (ContainerExceptionInterface $exception) {
             return $handlers;
         }
 
-        $dependencies = array_merge(...array_values($configProvider->getDependencies()));
-
-        foreach (array_keys($dependencies) as $handler) {
+        foreach ($config[HandlersConfigProvider::class] as $handler) {
             if (!$this->isHandler($handler)) {
                 continue;
             }
