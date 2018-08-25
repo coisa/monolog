@@ -10,4 +10,6 @@ $configProvider = new ConfigProvider();
 $serviceManager = new ServiceManager();
 $serviceManager->configure($configProvider->getDependencies());
 
+$serviceManager->setService('config', $configProvider());
+
 return $serviceManager->get('logger');
