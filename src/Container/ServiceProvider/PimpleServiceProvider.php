@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace CoiSA\Monolog\Container\ServiceProvider;
 
+use CoiSA\Monolog\ConfigProvider;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use Zend\Pimple\Config\Config;
@@ -20,8 +21,6 @@ use Zend\Pimple\Config\Config;
  */
 class PimpleServiceProvider implements ServiceProviderInterface
 {
-    use ConfigProviderTrait;
-
     /**
      * Registers Monolog services on the given container.
      *
@@ -33,17 +32,13 @@ class PimpleServiceProvider implements ServiceProviderInterface
             $originalConfig = $pimple['config'];
         }
 
-        $config = new Config([
-            'dependencies' => $this->config->getDependencies()
-        ]);
-        $pimple[Config::class] = $config;
+        $configProvider = new ConfigProvider();
 
+        $config = new Config($configProvider());
         $config->configureContainer($pimple);
 
         if (isset($originalConfig)) {
-            $pimple['config'] = $originalConfig;
-        } else {
-            unset($pimple['config']);
+            $pimple['config'] = array_merge_recursive($originalConfig, $pimple['config']);
         }
     }
 }

@@ -20,8 +20,6 @@ use Pimple\Container;
  */
 class PhalconServiceProvider implements ServiceProviderInterface
 {
-    use ConfigProviderTrait;
-
     /**
      * Registers Monolog services on the given container.
      *
@@ -30,7 +28,7 @@ class PhalconServiceProvider implements ServiceProviderInterface
     public function register(DiInterface $di)
     {
         $pimple = new Container();
-        $pimple->register(new PimpleServiceProvider($this->config));
+        $pimple->register(new PimpleServiceProvider());
 
         foreach ($pimple->keys() as $key) {
             $di->setShared($key, $pimple->raw($key));

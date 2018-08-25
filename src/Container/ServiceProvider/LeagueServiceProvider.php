@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace CoiSA\Monolog\Container\ServiceProvider;
 
+use CoiSA\Monolog\ConfigProvider;
 use League\Container\ServiceProvider\AbstractServiceProvider;
 use Pimple\Container;
 
@@ -21,14 +22,13 @@ use Pimple\Container;
  */
 class LeagueServiceProvider extends AbstractServiceProvider
 {
-    use ConfigProviderTrait;
-
     /**
      * {@inheritdoc}
      */
     public function provides(string $service): bool
     {
-        $dependencies = array_merge(...array_values($this->config->getDependencies()));
+        $configProvider = new ConfigProvider();
+        $dependencies = array_merge(...array_values($configProvider->getDependencies()));
 
         return array_key_exists($service, $dependencies);
     }
@@ -39,7 +39,7 @@ class LeagueServiceProvider extends AbstractServiceProvider
     public function register()
     {
         $pimple = new Container();
-        $pimple->register(new PimpleServiceProvider($this->config));
+        $pimple->register(new PimpleServiceProvider());
 
         foreach ($pimple->keys() as $key) {
             $this->getContainer()->add($key, $pimple->raw($key));
