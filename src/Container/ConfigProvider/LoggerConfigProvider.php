@@ -42,9 +42,6 @@ class LoggerConfigProvider
     public function getDependencies()
     {
         return [
-            'services'     => [
-                __CLASS__ => $this
-            ],
             'aliases'      => [
                 'logger'               => Logger::class,
                 LoggerInterface::class => Logger::class,
