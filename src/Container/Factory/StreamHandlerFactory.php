@@ -23,28 +23,6 @@ use Psr\Container\ContainerInterface;
 class StreamHandlerFactory
 {
     /**
-     * @var string Stream path
-     */
-    private $path;
-
-    /**
-     * @var int Log level
-     */
-    private $level;
-
-    /**
-     * StreamHandlerFactory constructor.
-     *
-     * @param string $path Resource system path for the handler
-     * @param int $level optional Log level for the handler
-     */
-    public function __construct(string $path = 'php://stdout', int $level = Logger::DEBUG)
-    {
-        $this->path = $path;
-        $this->level = $level;
-    }
-
-    /**
      * Stream handler service factory
      *
      * @param ContainerInterface $container
@@ -54,9 +32,8 @@ class StreamHandlerFactory
     public function __invoke(ContainerInterface $container): HandlerInterface
     {
         try {
-            $handler = new StreamHandler($this->path, $this->level);
+            $handler = new StreamHandler('php://stdout', Logger::INFO);
         } catch (\Exception $exception) {
-            // Prevent application crashes
             $handler = new NullHandler();
         }
 

@@ -11,6 +11,7 @@ namespace CoiSA\Monolog\Container\Factory;
 
 use Monolog\Handler\FingersCrossedHandler;
 use Monolog\Handler\GroupHandler;
+use Monolog\Handler\HandlerInterface;
 use Monolog\Handler\NullHandler;
 use Monolog\Logger;
 use Psr\Container\ContainerExceptionInterface;
@@ -24,42 +25,20 @@ use Psr\Container\ContainerInterface;
 class FingersCrossedHandlerFactory
 {
     /**
-     * @var string Fingers crossed handler
-     */
-    private $handler;
-
-    /**
-     * @var int Log level
-     */
-    private $level;
-
-    /**
-     * FingersCrossedHandlerFactory constructor.
-     *
-     * @param string $handler
-     * @param int $level
-     */
-    public function __construct(string $handler = GroupHandler::class, int $level = Logger::ERROR)
-    {
-        $this->handler = $handler;
-        $this->level = $level;
-    }
-
-    /**
      * Fingers crossed handler service factory
      *
      * @param ContainerInterface $container
      *
-     * @return FingersCrossedHandler
+     * @return HandlerInterface
      */
-    public function __invoke(ContainerInterface $container): FingersCrossedHandler
+    public function __invoke(ContainerInterface $container): HandlerInterface
     {
         try {
-            $handler = $container->get($this->handler);
+            $handler = $container->get(GroupHandler::class);
         } catch (ContainerExceptionInterface $exception) {
-            $handler = new NullHandler();
+            return new NullHandler();
         }
 
-        return new FingersCrossedHandler($handler, $this->level);
+        return new FingersCrossedHandler($handler, Logger::ERROR);
     }
 }

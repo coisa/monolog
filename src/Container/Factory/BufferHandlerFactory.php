@@ -12,7 +12,6 @@ namespace CoiSA\Monolog\Container\Factory;
 use Monolog\Handler\BufferHandler;
 use Monolog\Handler\GroupHandler;
 use Monolog\Handler\NullHandler;
-use Monolog\Logger;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 
@@ -24,30 +23,6 @@ use Psr\Container\ContainerInterface;
 class BufferHandlerFactory
 {
     /**
-     * @var string Fingers crossed handler
-     */
-    private $handler;
-
-    /**
-     * @var int Log level
-     */
-    private $level;
-
-    /**
-     * FingersCrossedHandlerFactory constructor.
-     *
-     * @param string $handler
-     * @param int $level
-     */
-    public function __construct(string $handler = GroupHandler::class, int $level = Logger::DEBUG)
-    {
-        $this->handler = $handler;
-        $this->level = $level;
-    }
-
-    /**
-     * Fingers crossed handler service factory
-     *
      * @param ContainerInterface $container
      *
      * @return BufferHandler
@@ -55,11 +30,11 @@ class BufferHandlerFactory
     public function __invoke(ContainerInterface $container): BufferHandler
     {
         try {
-            $handler = $container->get($this->handler);
+            $handler = $container->get(GroupHandler::class);
         } catch (ContainerExceptionInterface $exception) {
             $handler = new NullHandler();
         }
 
-        return new BufferHandler($handler, null, $this->level);
+        return new BufferHandler($handler);
     }
 }

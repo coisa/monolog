@@ -20,21 +20,6 @@ use Psr\Container\ContainerInterface;
 class SyslogHandlerFactory
 {
     /**
-     * @var string Syslog identity name
-     */
-    private $identity;
-
-    /**
-     * SyslogHandlerFactory constructor.
-     *
-     * @param string|null $identity
-     */
-    public function __construct(string $identity = null)
-    {
-        $this->identity = $identity ?: gethostname();
-    }
-
-    /**
      * Syslog handler service factory
      *
      * @param ContainerInterface $container
@@ -43,6 +28,6 @@ class SyslogHandlerFactory
      */
     public function __invoke(ContainerInterface $container): SyslogHandler
     {
-        return new SyslogHandler($this->identity);
+        return new SyslogHandler('monolog');
     }
 }
