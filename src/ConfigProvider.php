@@ -8,9 +8,11 @@ declare(strict_types=1);
 
 namespace CoiSA\Monolog;
 
-use CoiSA\Monolog\Container\ConfigProvider\{
-    LoggerConfigProvider, StrategiesConfigProvider, HandlersConfigProvider, ProcessorsConfigProvider
-};
+use CoiSA\Monolog\Container\ConfigProvider\{LoggerConfigProvider,
+    MiddlewareConfigProvider,
+    StrategiesConfigProvider,
+    HandlersConfigProvider,
+    ProcessorsConfigProvider};
 use Monolog\Handler;
 use Zend\ConfigAggregator\{
     ArrayProvider, ConfigAggregator
@@ -60,6 +62,7 @@ final class ConfigProvider
             StrategiesConfigProvider::class,
             HandlersConfigProvider::class,
             ProcessorsConfigProvider::class,
+            MiddlewareConfigProvider::class,
         ]);
     }
 

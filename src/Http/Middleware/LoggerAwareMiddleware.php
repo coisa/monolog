@@ -20,7 +20,7 @@ use Psr\Log\LoggerInterface;
  *
  * @package CoiSA\Monolog\Http\Middleware
  */
-class LoggerAwareMiddleware implements MiddlewareInterface
+final class LoggerAwareMiddleware implements MiddlewareInterface
 {
     /**
      * @var LoggerInterface Logger instance
