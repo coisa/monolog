@@ -1,7 +1,7 @@
 <?php
 /**
  * @author Felipe Sayão Lobato Abreu <github@felipeabreu.com.br>
- * @package CoiSA\Monolog\Container\ConfigProvider
+ * @package CoiSA\Monolog\Test
  */
 
 declare(strict_types=1);
