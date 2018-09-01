@@ -1,7 +1,6 @@
 <?php
-
-/**
- * @author Felipe Sayão Lobato Abreu <contato@felipeabreu.com.br>
+/***
+ * @author Felipe Sayão Lobato Abreu <github@felipeabreu.com.br>
  * @package CoiSA\Monolog
  */
 
