@@ -8,23 +8,25 @@ declare(strict_types=1);
 
 namespace CoiSA\Monolog\Test;
 
-use CoiSA\Monolog\ConfigProvider;
+use CoiSA\Monolog\Container\ServiceProvider\PimpleServiceProvider;
+use Pimple\Container;
 use Psr\Container\ContainerInterface;
-use Zend\ServiceManager\ServiceManager;
 
 /**
- * Class ServiceManagerTest
+ * Class PimpleTest
  *
  * @package CoiSA\Monolog\Test
  */
-class ServiceManagerTest extends ContainerTest
+class PimpleTest extends ContainerTest
 {
     /**
      * @return ContainerInterface
      */
     public function getContainer(): ContainerInterface
     {
-        $configProvider = new ConfigProvider();
-        return new ServiceManager($configProvider->getDependencies());
+        $pimple = new Container();
+        $pimple->register(new PimpleServiceProvider());
+
+        return new \Pimple\Psr11\Container($pimple);
     }
 }
