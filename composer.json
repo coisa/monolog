@@ -56,6 +56,6 @@
         }
     },
     "suggest": {
-        "zendframework/zend-pimple-config": "If you intend to use with any of follow: Pimple\\Container, League\\Container or Phalcon\\Di"
+        "zendframework/zend-pimple-config": "If you intend to use with any of follow: Pimple\\Container or League\\Container"
     }
 }
