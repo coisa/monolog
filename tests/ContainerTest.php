@@ -28,12 +28,18 @@ abstract class ContainerTest extends TestCase
     abstract public function getContainer(): ContainerInterface;
 
     /**
+     * Test if a container can create a service with given service name
+     *
+     * @param string $serviceName Service name to locate
+     * @param string $instanceOf Instance name to compare
+     *
      * @dataProvider provideServiceNames
      */
-    public function testCanCreateService(string $serviceName)
+    public function testCanCreateService(string $serviceName, string $instanceOf)
     {
         $object = $this->getContainer()->get($serviceName);
-        $this->assertInstanceOf($serviceName, $object);
+
+        $this->assertInstanceOf($instanceOf, $object);
     }
 
     /**
@@ -48,19 +54,25 @@ abstract class ContainerTest extends TestCase
 
         $services = array_keys(array_merge(...array_values($dependencies)));
 
-        $services = array_filter($services, function ($value) {
-            $ignore = [
-                'logger',
-                LoggerInterface::class,
+        $services = array_filter($services, function ($serviceName) {
+            $notStrictDependecies = [
                 RedisHandler::class,
                 RavenHandler::class,
             ];
 
-            return false === \in_array($value, $ignore);
+            return false === \in_array($serviceName, $notStrictDependecies);
         }, ARRAY_FILTER_USE_BOTH);
 
-        return array_map(function ($item) {
-            return [$item];
+        return array_map(function ($serviceName) {
+            $instanceOf = $serviceName === 'logger' ?
+                LoggerInterface::class :
+                $serviceName
+            ;
+
+            return [
+                $serviceName,
+                $instanceOf
+            ];
         }, $services);
     }
 }
