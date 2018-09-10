@@ -13,7 +13,6 @@ use Monolog\Handler\RavenHandler;
 use Monolog\Handler\RedisHandler;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
-use Psr\Log\LoggerInterface;
 
 /**
  * Class ContainerTest
@@ -63,11 +62,8 @@ abstract class ContainerTest extends TestCase
             return false === \in_array($serviceName, $notStrictDependecies);
         }, ARRAY_FILTER_USE_BOTH);
 
-        return array_map(function ($serviceName) {
-            $instanceOf = $serviceName === 'logger' ?
-                LoggerInterface::class :
-                $serviceName
-            ;
+        return array_map(function ($serviceName) use ($dependencies) {
+            $instanceOf = $dependencies['aliases'][$serviceName] ?? $serviceName;
 
             return [
                 $serviceName,

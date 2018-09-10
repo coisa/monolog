@@ -43,6 +43,7 @@ class LoggerConfigProvider
         return [
             'aliases'      => [
                 'logger'               => Logger::class,
+                'monolog'              => Logger::class,
                 LoggerInterface::class => Logger::class,
             ],
             'factories'    => [

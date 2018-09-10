@@ -10,6 +10,7 @@ namespace CoiSA\Monolog\Container\Factory;
 
 use Monolog\Handler\BufferHandler;
 use Monolog\Handler\GroupHandler;
+use Monolog\Handler\HandlerInterface;
 use Monolog\Handler\NullHandler;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
@@ -24,14 +25,14 @@ class BufferHandlerFactory
     /**
      * @param ContainerInterface $container
      *
-     * @return BufferHandler
+     * @return HandlerInterface
      */
-    public function __invoke(ContainerInterface $container): BufferHandler
+    public function __invoke(ContainerInterface $container): HandlerInterface
     {
         try {
             $handler = $container->get(GroupHandler::class);
         } catch (ContainerExceptionInterface $exception) {
-            $handler = new NullHandler();
+            return new NullHandler();
         }
 
         return new BufferHandler($handler);
