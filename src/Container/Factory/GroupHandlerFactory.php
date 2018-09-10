@@ -8,7 +8,6 @@ declare(strict_types=1);
 
 namespace CoiSA\Monolog\Container\Factory;
 
-use CoiSA\Monolog\Container\ConfigProvider\HandlersConfigProvider;
 use Monolog\Handler\GroupHandler;
 use Monolog\Handler\HandlerInterface;
 use Monolog\Handler\NullHandler;
@@ -56,7 +55,7 @@ class GroupHandlerFactory
             return $handlers;
         }
 
-        foreach ($config[HandlersConfigProvider::class] as $handler) {
+        foreach ($config[GroupHandler::class] as $handler) {
             if (!$this->isHandler($handler)) {
                 continue;
             }

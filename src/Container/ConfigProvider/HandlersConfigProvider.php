@@ -27,8 +27,8 @@ class HandlersConfigProvider
     public function __invoke(): array
     {
         return [
-            __CLASS__      => array_keys(array_merge(...array_values($this->getDependencies()))),
-            'dependencies' => $this->getDependencies()
+            'dependencies'              => $this->getDependencies(),
+            Handler\GroupHandler::class => $this->getHandlers(),
         ];
     }
 
@@ -50,5 +50,15 @@ class HandlersConfigProvider
                 Handler\RavenHandler::class  => Factory\RavenHandlerFactory::class,
             ],
         ];
+    }
+
+    /**
+     * Provide handlers to put into GroupHandler
+     *
+     * @return array
+     */
+    public function getHandlers(): array
+    {
+        return array_keys(array_merge(...array_values($this->getDependencies())));
     }
 }
