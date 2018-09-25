@@ -10,7 +10,11 @@ EOF;
 
 $finder = PhpCsFixer\Finder::create()
     ->files()
-    ->in(__DIR__ . '/src')
+    ->in([
+        __DIR__ . '/examples',
+        __DIR__ . '/src',
+        __DIR__ . '/tests'
+    ])
     ->name('*.php');
 
 return PhpCsFixer\Config::create()
