@@ -1,11 +1,4 @@
-<?php
-/**
- * @author Felipe Sayão Lobato Abreu <github@felipeabreu.com.br>
- *
- * @package CoiSA\Monolog\Container\Factory
- */
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 /*
  * This file is part of coisa/monolog.
  *
