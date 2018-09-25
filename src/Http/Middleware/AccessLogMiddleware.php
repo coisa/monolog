@@ -1,16 +1,16 @@
-<?php
-/**
- * @author Felipe Sayão Lobato Abreu <github@felipeabreu.com.br>
- * @package CoiSA\Monolog\Http\Middleware
+<?php declare(strict_types=1);
+/*
+ * This file is part of coisa/monolog.
+ *
+ * (c) Felipe Sayão Lobato Abreu <github@felipeabreu.com.br>
+ *
+ * This source file is subject to the Apache v2.0 license that is bundled
+ * with this source code in the file LICENSE.
  */
-
-declare(strict_types=1);
 
 namespace CoiSA\Monolog\Http\Middleware;
 
-use CoiSA\Monolog\Log\Processor\ElapsedTimeProcessor;
 use Monolog\Logger;
-use Monolog\Processor\WebProcessor;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -39,7 +39,7 @@ final class AccessLogMiddleware implements MiddlewareInterface
     }
 
     /**
-     * @param ServerRequestInterface $request
+     * @param ServerRequestInterface  $request
      * @param RequestHandlerInterface $handler
      *
      * @return ResponseInterface
@@ -47,7 +47,7 @@ final class AccessLogMiddleware implements MiddlewareInterface
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $response = $handler->handle($request);
-        $this->logger->info('access_log', compact('request', 'response'));
+        $this->logger->info('access_log', \compact('request', 'response'));
 
         return $response;
     }

@@ -1,5 +1,7 @@
 .idea/
+.scannerwork/
 src/.*/
+vendor/
+.php_cs.cache
 composer.phar
 composer.lock
-/vendor/

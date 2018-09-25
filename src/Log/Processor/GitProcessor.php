@@ -1,7 +1,11 @@
-<?php
-/**
- * @author Felipe Sayão Lobato Abreu <github@felipeabreu.com.br>
- * @package CoiSA\Monolog\Log\Processor
+<?php declare(strict_types=1);
+/*
+ * This file is part of coisa/monolog.
+ *
+ * (c) Felipe Sayão Lobato Abreu <github@felipeabreu.com.br>
+ *
+ * This source file is subject to the Apache v2.0 license that is bundled
+ * with this source code in the file LICENSE.
  */
 
 namespace CoiSA\Monolog\Log\Processor;
@@ -24,10 +28,11 @@ class GitProcessor
     private $release;
 
     /**
-     * @param  array $record
+     * @param array $record
+     *
      * @return array
      */
-    public function __invoke(array $record)
+    public function __invoke(array $record): array
     {
         $git = $this->getCommitInfo();
         if (null === $git) {
@@ -47,22 +52,22 @@ class GitProcessor
     /**
      * Returns git commit & branch info
      *
-     * @return array|null
+     * @return null|array
      */
     private function getCommitInfo(): ?array
     {
         if (!isset($this->commitInfo)) {
-            $branches = shell_exec('git branch -v --no-abbrev 2> /dev/null');
+            $branches = \shell_exec('git branch -v --no-abbrev 2> /dev/null');
 
             if (false === $branches) {
                 $this->commitInfo = false;
             }
 
-            if (preg_match('{^\* (.+?)\s+([a-f0-9]{40})(?:\s|$)}m', $branches, $matches)) {
-                $this->commitInfo = array(
+            if (\preg_match('{^\* (.+?)\s+([a-f0-9]{40})(?:\s|$)}m', $branches, $matches)) {
+                $this->commitInfo = [
                     'branch' => $matches[1],
                     'commit' => $matches[2],
-                );
+                ];
             }
         }
 
@@ -77,10 +82,10 @@ class GitProcessor
     private function getRelease(): ?string
     {
         if (!isset($this->release)) {
-            shell_exec('git fetch --tags 2> /dev/null');
+            \shell_exec('git fetch --tags 2> /dev/null');
 
-            $release = shell_exec('git tag | sort -r --version-sort | head -n1');
-            $this->release = $release ? trim($release, "\n") : false;
+            $release       = \shell_exec('git tag | sort -r --version-sort | head -n1');
+            $this->release = $release ? \trim($release, "\n") : false;
         }
 
         return $this->release ?: null;
