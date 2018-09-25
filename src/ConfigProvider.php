@@ -1,22 +1,23 @@
-<?php
-/***
- * @author Felipe Sayão Lobato Abreu <github@felipeabreu.com.br>
- * @package CoiSA\Monolog
+<?php declare(strict_types=1);
+/*
+ * This file is part of coisa/monolog.
+ *
+ * (c) Felipe Sayão Lobato Abreu <github@felipeabreu.com.br>
+ *
+ * This source file is subject to the Apache v2.0 license that is bundled
+ * with this source code in the file LICENSE.
  */
-
-declare(strict_types=1);
 
 namespace CoiSA\Monolog;
 
-use CoiSA\Monolog\Container\ConfigProvider\{LoggerConfigProvider,
-    MiddlewareConfigProvider,
-    StrategiesConfigProvider,
-    HandlersConfigProvider,
-    ProcessorsConfigProvider};
+use CoiSA\Monolog\Container\ConfigProvider\HandlersConfigProvider;
+use CoiSA\Monolog\Container\ConfigProvider\LoggerConfigProvider;
+use CoiSA\Monolog\Container\ConfigProvider\MiddlewareConfigProvider;
+use CoiSA\Monolog\Container\ConfigProvider\ProcessorsConfigProvider;
+use CoiSA\Monolog\Container\ConfigProvider\StrategiesConfigProvider;
 use Monolog\Handler;
-use Zend\ConfigAggregator\{
-    ArrayProvider, ConfigAggregator
-};
+use Zend\ConfigAggregator\ArrayProvider;
+use Zend\ConfigAggregator\ConfigAggregator;
 
 /**
  * Class ConfigProvider
@@ -48,13 +49,13 @@ final class ConfigProvider
     /**
      * ConfigProvider constructor.
      *
-     * @param string|null $strategy optional Default handler strategy
+     * @param null|string $strategy optional Default handler strategy
      */
     public function __construct(?string $strategy = self::EAGER)
     {
         $this->config = new ConfigAggregator([
             new ArrayProvider([
-                __CLASS__      => [
+                __CLASS__ => [
                     'strategy' => $strategy
                 ],
             ]),

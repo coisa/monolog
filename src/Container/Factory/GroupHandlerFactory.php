@@ -1,10 +1,12 @@
-<?php
-/**
- * @author Felipe Sayão Lobato Abreu <github@felipeabreu.com.br>
- * @package CoiSA\Monolog\Container\Factory
+<?php declare(strict_types=1);
+/*
+ * This file is part of coisa/monolog.
+ *
+ * (c) Felipe Sayão Lobato Abreu <github@felipeabreu.com.br>
+ *
+ * This source file is subject to the Apache v2.0 license that is bundled
+ * with this source code in the file LICENSE.
  */
-
-declare(strict_types=1);
 
 namespace CoiSA\Monolog\Container\Factory;
 
@@ -29,7 +31,7 @@ class GroupHandlerFactory
      *
      * @return GroupHandler
      */
-    public function __invoke(ContainerInterface $container) : GroupHandler
+    public function __invoke(ContainerInterface $container): GroupHandler
     {
         $handlers = $this->getHandlers($container);
 
@@ -62,7 +64,7 @@ class GroupHandlerFactory
             $handlers[] = $this->getHandler($container, $handler);
         }
 
-        return array_filter(
+        return \array_filter(
             $handlers,
             function ($handler) {
                 return !($handler instanceof NullHandler);
@@ -75,11 +77,11 @@ class GroupHandlerFactory
      * Try to get a single handler based on the given class name
      *
      * @param ContainerInterface $container
-     * @param string $className
+     * @param string             $className
      *
      * @return HandlerInterface
      */
-    private function getHandler(ContainerInterface $container, string $className) : HandlerInterface
+    private function getHandler(ContainerInterface $container, string $className): HandlerInterface
     {
         try {
             $handler = $container->get($className);
@@ -99,12 +101,12 @@ class GroupHandlerFactory
      */
     private function isHandler(string $className): bool
     {
-        $implements = @class_implements($className);
+        $implements = @\class_implements($className);
         if (false === $implements) {
             return false;
         }
 
-        if (false === in_array(HandlerInterface::class, $implements)) {
+        if (false === \in_array(HandlerInterface::class, $implements)) {
             return false;
         }
 

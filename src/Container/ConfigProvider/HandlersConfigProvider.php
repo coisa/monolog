@@ -1,10 +1,12 @@
-<?php
-/**
- * @author Felipe Sayão Lobato Abreu <github@felipeabreu.com.br>
- * @package CoiSA\Monolog\Container\ConfigProvider
+<?php declare(strict_types=1);
+/*
+ * This file is part of coisa/monolog.
+ *
+ * (c) Felipe Sayão Lobato Abreu <github@felipeabreu.com.br>
+ *
+ * This source file is subject to the Apache v2.0 license that is bundled
+ * with this source code in the file LICENSE.
  */
-
-declare(strict_types=1);
 
 namespace CoiSA\Monolog\Container\ConfigProvider;
 
@@ -59,6 +61,6 @@ class HandlersConfigProvider
      */
     public function getHandlers(): array
     {
-        return array_keys(array_merge(...array_values($this->getDependencies())));
+        return \array_keys(\array_merge(...\array_values($this->getDependencies())));
     }
 }

@@ -1,10 +1,12 @@
-<?php
-/**
- * @author Felipe Sayão Lobato Abreu <github@felipeabreu.com.br>
- * @package CoiSA\Monolog\Test
+<?php declare(strict_types=1);
+/*
+ * This file is part of coisa/monolog.
+ *
+ * (c) Felipe Sayão Lobato Abreu <github@felipeabreu.com.br>
+ *
+ * This source file is subject to the Apache v2.0 license that is bundled
+ * with this source code in the file LICENSE.
  */
-
-declare(strict_types=1);
 
 namespace CoiSA\Monolog\Test;
 
@@ -30,11 +32,11 @@ abstract class ContainerTest extends TestCase
      * Test if a container can create a service with given service name
      *
      * @param string $serviceName Service name to locate
-     * @param string $instanceOf Instance name to compare
+     * @param string $instanceOf  Instance name to compare
      *
      * @dataProvider provideServiceNames
      */
-    public function testCanCreateService(string $serviceName, string $instanceOf)
+    public function testCanCreateService(string $serviceName, string $instanceOf): void
     {
         $object = $this->getContainer()->get($serviceName);
 
@@ -48,12 +50,12 @@ abstract class ContainerTest extends TestCase
      */
     public function provideServiceNames()
     {
-        $config = new ConfigProvider();
+        $config       = new ConfigProvider();
         $dependencies = $config->getDependencies();
 
-        $services = array_keys(array_merge(...array_values($dependencies)));
+        $services = \array_keys(\array_merge(...\array_values($dependencies)));
 
-        $services = array_filter($services, function ($serviceName) {
+        $services = \array_filter($services, function ($serviceName) {
             $notStrictDependecies = [
                 RedisHandler::class,
                 RavenHandler::class,
@@ -62,7 +64,7 @@ abstract class ContainerTest extends TestCase
             return false === \in_array($serviceName, $notStrictDependecies);
         }, ARRAY_FILTER_USE_BOTH);
 
-        return array_map(function ($serviceName) use ($dependencies) {
+        return \array_map(function ($serviceName) use ($dependencies) {
             $instanceOf = $dependencies['aliases'][$serviceName] ?? $serviceName;
 
             return [
