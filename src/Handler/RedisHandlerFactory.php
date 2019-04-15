@@ -23,9 +23,9 @@ final class RedisHandlerFactory
     /**
      * @param ContainerInterface $container
      *
-     * @return RedisHandler
-     *
      * @throws \InvalidArgumentException
+     *
+     * @return RedisHandler
      */
     public function __invoke(ContainerInterface $container): RedisHandler
     {
@@ -39,7 +39,7 @@ final class RedisHandlerFactory
 
     /**
      * @param ContainerInterface $container
-     * @param string $default
+     * @param string             $default
      *
      * @return string
      */

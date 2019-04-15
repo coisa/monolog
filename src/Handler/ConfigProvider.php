@@ -11,6 +11,7 @@
 namespace CoiSA\Monolog\Handler;
 
 use Monolog\Handler;
+use Monolog\Handler\GroupHandler;
 use Raven_Client;
 
 /**
@@ -27,7 +28,6 @@ class ConfigProvider
     {
         return [
             'dependencies' => $this->getDependencies(),
-            Handler\GroupHandler::class => \array_keys(\array_merge(...\array_values($this->getDependencies())))
         ];
     }
 
@@ -37,14 +37,18 @@ class ConfigProvider
     public function getDependencies()
     {
         return [
+            'aliases' => [
+                GroupHandler::class => Handler\WhatFailureGroupHandler::class,
+            ],
             'invokables' => [
                 Raven_Client::class => Raven_Client::class
             ],
             'factories' => [
-                Handler\StreamHandler::class => StreamHandlerFactory::class,
-                Handler\RavenHandler::class  => RavenHandlerFactory::class,
-                Handler\SyslogHandler::class => SyslogHandlerFactory::class,
-                Handler\RedisHandler::class  => RedisHandlerFactory::class,
+                Handler\StreamHandler::class           => StreamHandlerFactory::class,
+                Handler\RavenHandler::class            => RavenHandlerFactory::class,
+                Handler\SyslogHandler::class           => SyslogHandlerFactory::class,
+                Handler\RedisHandler::class            => RedisHandlerFactory::class,
+                Handler\WhatFailureGroupHandler::class => WhatFailureGroupHandlerFactory::class,
             ],
         ];
     }

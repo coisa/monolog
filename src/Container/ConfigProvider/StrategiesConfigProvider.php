@@ -41,7 +41,6 @@ class StrategiesConfigProvider
     {
         return [
             'factories' => [
-                Handler\GroupHandler::class          => Factory\GroupHandlerFactory::class,
                 Handler\FingersCrossedHandler::class => Factory\FingersCrossedHandlerFactory::class,
                 Handler\BufferHandler::class         => Factory\BufferHandlerFactory::class,
                 Handler\DeduplicationHandler::class  => Factory\DeduplicationHandlerFactory::class,

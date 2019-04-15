@@ -36,7 +36,7 @@ final class SyslogHandlerFactory
 
     /**
      * @param ContainerInterface $container
-     * @param string $default
+     * @param string             $default
      *
      * @return string
      */

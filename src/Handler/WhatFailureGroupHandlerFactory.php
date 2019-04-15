@@ -8,9 +8,9 @@
  * with this source code in the file LICENSE.
  */
 
-namespace CoiSA\Monolog\Container\Factory;
+namespace CoiSA\Monolog\Handler;
 
-use Monolog\Handler\GroupHandler;
+use CoiSA\Monolog\StrategyInterface;
 use Monolog\Handler\HandlerInterface;
 use Monolog\Handler\NullHandler;
 use Monolog\Handler\WhatFailureGroupHandler;
@@ -18,20 +18,22 @@ use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 
 /**
- * Class GroupHandlerFactory
+ * Class WhatFailureGroupHandlerFactory
  *
- * @package CoiSA\Monolog\Container\Factory
+ * @package CoiSA\Monolog\Handler
  */
-class GroupHandlerFactory
+final class WhatFailureGroupHandlerFactory
 {
     /**
      * Group handler service factory
      *
      * @param ContainerInterface $container
      *
-     * @return GroupHandler
+     * @throws \ReflectionException
+     *
+     * @return WhatFailureGroupHandler
      */
-    public function __invoke(ContainerInterface $container): GroupHandler
+    public function __invoke(ContainerInterface $container): WhatFailureGroupHandler
     {
         $handlers = $this->getHandlers($container);
 
@@ -42,6 +44,8 @@ class GroupHandlerFactory
      * Returns the handlers collection to group into a single GroupHandler
      *
      * @param ContainerInterface $container
+     *
+     * @throws \ReflectionException
      *
      * @return array
      */
@@ -57,10 +61,17 @@ class GroupHandlerFactory
             return $handlers;
         }
 
-        foreach ($config[GroupHandler::class] as $handler) {
+        $dependencies = $this->getCandidates($config);
+
+        foreach ($dependencies as $handler) {
+            if (!\is_string($handler)) {
+                continue;
+            }
+
             if (!$this->isHandler($handler)) {
                 continue;
             }
+
             $handlers[] = $this->getHandler($container, $handler);
         }
 
@@ -85,7 +96,7 @@ class GroupHandlerFactory
     {
         try {
             $handler = $container->get($className);
-        } catch (ContainerExceptionInterface $exception) {
+        } catch (\Throwable $exception) {
             return new NullHandler();
         }
 
@@ -111,5 +122,30 @@ class GroupHandlerFactory
         }
 
         return true;
+    }
+
+    /**
+     * @param $config
+     *
+     * @return array
+     * @throws \ReflectionException
+     */
+    private function getCandidates($config): array
+    {
+        $dependencies = \array_keys(\array_merge(
+            $config['dependencies']['invokables'],
+            $config['dependencies']['factories']
+        ));
+
+        $interface = new \ReflectionClass(StrategyInterface::class);
+        $constants = $interface->getConstants();
+
+        $ignore = array_merge($constants, [
+            WhatFailureGroupHandler::class,
+        ]);
+
+        $dependencies = array_diff($dependencies, $ignore);
+
+        return $dependencies;
     }
 }

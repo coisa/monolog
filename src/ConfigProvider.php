@@ -10,7 +10,6 @@
 
 namespace CoiSA\Monolog;
 
-use CoiSA\Monolog\Container\ConfigProvider\HandlersConfigProvider;
 use CoiSA\Monolog\Container\ConfigProvider\LoggerConfigProvider;
 use CoiSA\Monolog\Container\ConfigProvider\StrategiesConfigProvider;
 use Zend\ConfigAggregator\ArrayProvider;
@@ -45,8 +44,8 @@ final class ConfigProvider
             StrategiesConfigProvider::class,
             Git\ConfigProvider::class,
             Handler\ConfigProvider::class,
-            Processor\ConfigProvider::class,
             Middleware\ConfigProvider::class,
+            Processor\ConfigProvider::class,
         ]);
     }
 

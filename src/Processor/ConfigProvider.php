@@ -49,7 +49,7 @@ class ConfigProvider
             ],
             'factories' => [
                 GitProcessor::class => GitProcessorFactory::class,
-            ]
+            ],
         ];
     }
 }
