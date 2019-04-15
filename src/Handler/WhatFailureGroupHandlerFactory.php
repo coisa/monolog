@@ -55,15 +55,10 @@ final class WhatFailureGroupHandlerFactory
     private function getHandlers(ContainerInterface $container): array
     {
         $handlers = [
-            new NullHandler()
+            $container->get(NullHandler::class),
         ];
 
-        try {
-            $config = $container->get('config');
-        } catch (ContainerExceptionInterface $exception) {
-            return $handlers;
-        }
-
+        $config = $container->get('config');
         $dependencies = $this->getCandidates($config);
 
         foreach ($dependencies as $handler) {
@@ -100,7 +95,7 @@ final class WhatFailureGroupHandlerFactory
         try {
             $handler = $container->get($className);
         } catch (\Throwable $exception) {
-            return new NullHandler();
+            return $container->get(NullHandler::class);
         }
 
         return $handler;

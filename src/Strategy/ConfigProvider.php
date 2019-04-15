@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace CoiSA\Monolog\Strategy;
 
+use Monolog\Handler\NullHandler;
+
 /**
  * Class ConfigProvider
  *
@@ -36,6 +38,9 @@ class ConfigProvider
     public function getDependencies()
     {
         return [
+            'invokables' => [
+                NullHandler::class => NullHandler::class
+            ],
             'factories' => [
                 StrategyInterface::class => StrategyHandlerFactory::class
             ],
