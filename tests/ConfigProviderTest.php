@@ -17,6 +17,7 @@ use CoiSA\Monolog\ConfigProvider;
 use CoiSA\Monolog\Container\ConfigProvider\LoggerConfigProvider;
 use CoiSA\Monolog\StrategyInterface;
 use PHPUnit\Framework\TestCase;
+use Zend\Stdlib\ArrayUtils;
 
 /**
  * Class ConfigProviderTest
@@ -80,12 +81,12 @@ final class ConfigProviderTest extends TestCase
     {
         $object = new $namespace();
 
-        $general = ($this->configProvider)();
+        $provided = ($this->configProvider)();
         $config  = ($object)();
 
-        $merged = \array_merge_recursive($general, $config);
+        $merged = ArrayUtils::merge($provided, $config, true);
 
-        $this->assertSame(\sort($merged), \sort($general));
+        $this->assertSame($merged, ($this->configProvider)());
     }
 
     /**
