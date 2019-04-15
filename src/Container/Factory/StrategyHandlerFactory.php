@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace CoiSA\Monolog\Container\Factory;
 
 use CoiSA\Monolog\ConfigProvider;
+use CoiSA\Monolog\StrategyInterface;
 use Monolog\Handler\HandlerInterface;
 use Monolog\Handler\NullHandler;
 use Psr\Container\ContainerExceptionInterface;
@@ -49,7 +50,7 @@ class StrategyHandlerFactory
     {
         try {
             $config   = $container->get('config');
-            $strategy = $config[ConfigProvider::class]['strategy'] ?? ConfigProvider::LAZY;
+            $strategy = $config[ConfigProvider::class]['strategy'] ?? StrategyInterface::LAZY;
         } catch (ContainerExceptionInterface $exception) {
             $strategy = null;
         }
