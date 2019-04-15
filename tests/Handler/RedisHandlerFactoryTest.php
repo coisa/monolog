@@ -1,4 +1,15 @@
-<?php declare(strict_types=1);
+<?php
+
+/**
+ * This file is part of coisa/monolog.
+ *
+ * (c) Felipe Sayão Lobato Abreu <github@felipeabreu.com.br>
+ *
+ * This source file is subject to the license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
+declare(strict_types=1);
 /*
  * This file is part of coisa/monolog.
  *
@@ -11,10 +22,7 @@
 namespace CoiSA\Monolog\Test\Handler;
 
 use CoiSA\Monolog\Handler\RedisHandlerFactory;
-use CoiSA\Monolog\Handler\StreamHandlerFactory;
 use Monolog\Handler\RedisHandler;
-use Monolog\Handler\StreamHandler;
-use Monolog\Handler\WhatFailureGroupHandler;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Container\ContainerInterface;
@@ -31,7 +39,7 @@ final class RedisHandlerFactoryTest extends TestCase
     /** @var ContainerInterface|ObjectProphecy */
     private $container;
 
-    /** @var \Redis|ObjectProphecy */
+    /** @var ObjectProphecy|\Redis */
     private $redis;
 
     /** @var RedisHandlerFactory */
@@ -40,7 +48,7 @@ final class RedisHandlerFactoryTest extends TestCase
     public function setUp(): void
     {
         $this->container = $this->prophesize(ContainerInterface::class);
-        $this->redis = $this->prophesize(\Redis::class);
+        $this->redis     = $this->prophesize(\Redis::class);
 
         $this->factory = new RedisHandlerFactory();
 
@@ -106,7 +114,7 @@ final class RedisHandlerFactoryTest extends TestCase
     {
         $this->markTestIncomplete();
 
-        $key = uniqid('test', true);
+        $key = \uniqid('test', true);
 
         $this->container->has('config')->willReturn(true);
         $this->container->get('config')->willReturn([

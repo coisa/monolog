@@ -1,4 +1,15 @@
-<?php declare(strict_types=1);
+<?php
+
+/**
+ * This file is part of coisa/monolog.
+ *
+ * (c) Felipe Sayão Lobato Abreu <github@felipeabreu.com.br>
+ *
+ * This source file is subject to the license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
+declare(strict_types=1);
 /*
  * This file is part of coisa/monolog.
  *
@@ -87,7 +98,7 @@ final class StreamHandlerFactoryTest extends TestCase
 
     public function testFactoryWithConfigReturnRepositoryWithGivenStream(): void
     {
-        $resource = \fopen(\sys_get_temp_dir(), 'r');
+        $resource = \fopen(\sys_get_temp_dir(), 'rb');
 
         $this->container->has('config')->willReturn(true);
         $this->container->get('config')->willReturn([

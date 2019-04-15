@@ -1,4 +1,15 @@
-<?php declare(strict_types=1);
+<?php
+
+/**
+ * This file is part of coisa/monolog.
+ *
+ * (c) Felipe Sayão Lobato Abreu <github@felipeabreu.com.br>
+ *
+ * This source file is subject to the license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
+declare(strict_types=1);
 /*
  * This file is part of coisa/monolog.
  *
@@ -10,10 +21,7 @@
 
 namespace CoiSA\Monolog\Test\Handler;
 
-use CoiSA\Monolog\Handler\DeduplicationHandlerFactory;
 use CoiSA\Monolog\Handler\FingersCrossedHandlerFactory;
-use Monolog\Handler\BufferHandler;
-use Monolog\Handler\DeduplicationHandler;
 use Monolog\Handler\FingersCrossedHandler;
 use Monolog\Handler\HandlerInterface;
 use Monolog\Handler\WhatFailureGroupHandler;
@@ -42,7 +50,7 @@ final class FingersCrossedHandlerFactoryTest extends TestCase
     public function setUp(): void
     {
         $this->container = $this->prophesize(ContainerInterface::class);
-        $this->handler = $this->prophesize(WhatFailureGroupHandler::class);
+        $this->handler   = $this->prophesize(WhatFailureGroupHandler::class);
 
         $this->factory = new FingersCrossedHandlerFactory();
 

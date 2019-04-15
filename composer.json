@@ -1,7 +1,7 @@
 {
     "name": "coisa/monolog",
     "description": "PSR-11 Monolog container config provider",
-    "license": "Apache-2.0",
+    "license": "MIT",
     "type": "library",
     "keywords": [
         "monolog",
