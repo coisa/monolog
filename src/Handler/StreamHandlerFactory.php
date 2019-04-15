@@ -18,7 +18,7 @@ use Psr\Container\ContainerInterface;
  *
  * @package CoiSA\Monolog\Container\Factory
  */
-class StreamHandlerFactory
+final class StreamHandlerFactory
 {
     /**
      * @param ContainerInterface $container
@@ -29,24 +29,35 @@ class StreamHandlerFactory
      */
     public function __invoke(ContainerInterface $container): StreamHandler
     {
-        $stream = 'php://stdout';
+        return new StreamHandler(
+            $this->getStream($container)
+        );
+    }
 
-        if ($container->has('config')) {
-            $config = $container->get('config');
-
-            if (!\array_key_exists(self::class, $config)) {
-                return new StreamHandler($stream);
-            }
-
-            if (!\is_string($config[self::class])
-                && !\is_resource($config[self::class])
-            ) {
-                return new StreamHandler($stream);
-            }
-
-            $stream = $config[self::class];
+    /**
+     * @param ContainerInterface $container
+     * @param string $default
+     *
+     * @return string|resource
+     */
+    private function getStream(ContainerInterface $container, string $default = 'php://stdout')
+    {
+        if (!$container->has('config')) {
+            return $default;
         }
 
-        return new StreamHandler($stream);
+        $config = $container->get('config');
+
+        if (!\array_key_exists(self::class, $config)) {
+            return $default;
+        }
+
+        $value = $config[self::class];
+
+        if (\is_string($value) || \is_resource($value)) {
+            return $value;
+        }
+
+        return $default;
     }
 }
