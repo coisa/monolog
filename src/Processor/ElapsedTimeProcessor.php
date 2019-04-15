@@ -8,14 +8,16 @@
  * with this source code in the file LICENSE.
  */
 
-namespace CoiSA\Monolog\Log\Processor;
+namespace CoiSA\Monolog\Processor;
+
+use Monolog\Processor\ProcessorInterface;
 
 /**
  * Class ElapsedTimeProcessor
  *
- * @package CoiSA\Monolog\Log\Processor
+ * @package CoiSA\Monolog\Processor
  */
-class ElapsedTimeProcessor
+final class ElapsedTimeProcessor implements ProcessorInterface
 {
     /**
      * @var \DateTimeImmutable Processor start time evaluator

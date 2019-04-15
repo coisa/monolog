@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace CoiSA\Monolog\Http\Middleware;
+namespace CoiSA\Monolog\Middleware;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -20,7 +20,7 @@ use Psr\Log\LoggerInterface;
 /**
  * Class LoggerAwareMiddleware
  *
- * @package CoiSA\Monolog\Http\Middleware
+ * @package CoiSA\Monolog\Middleware
  */
 final class LoggerAwareMiddleware implements MiddlewareInterface
 {

@@ -8,16 +8,15 @@
  * with this source code in the file LICENSE.
  */
 
-namespace CoiSA\Monolog\Container\Factory;
+namespace CoiSA\Monolog\Middleware;
 
-use CoiSA\Monolog\Http\Middleware\LoggerAwareMiddleware;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 
 /**
  * Class LoggerAwareMiddlewareFactory
  *
- * @package CoiSA\Monolog\Container\Factory
+ * @package CoiSA\Monolog\Middleware
  */
 final class LoggerAwareMiddlewareFactory
 {

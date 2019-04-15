@@ -8,32 +8,32 @@
  * with this source code in the file LICENSE.
  */
 
-namespace CoiSA\Monolog\Http\Middleware;
+namespace CoiSA\Monolog\Middleware;
 
-use Monolog\Logger;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Psr\Log\LoggerInterface;
 
 /**
  * Class AccessLogMiddleware
  *
- * @package CoiSA\Monolog\Http\Middleware
+ * @package CoiSA\Monolog\Middleware
  */
 final class AccessLogMiddleware implements MiddlewareInterface
 {
     /**
-     * @var Logger Monolog instance
+     * @var LoggerInterface
      */
     private $logger;
 
     /**
      * AccessLogMiddleware constructor.
      *
-     * @param Logger $logger
+     * @param LoggerInterface $logger
      */
-    public function __construct(Logger $logger)
+    public function __construct(LoggerInterface $logger)
     {
         $this->logger = $logger;
     }

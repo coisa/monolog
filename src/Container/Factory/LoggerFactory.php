@@ -10,11 +10,10 @@
 
 namespace CoiSA\Monolog\Container\Factory;
 
-use CoiSA\Monolog\Container\ConfigProvider\ProcessorsConfigProvider;
+use CoiSA\Monolog\Processor\ConfigProvider;
 use Monolog\Handler\HandlerInterface;
 use Monolog\Handler\NullHandler;
 use Monolog\Logger;
-use Monolog\Registry;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 
@@ -61,9 +60,6 @@ class LoggerFactory
 
         $this->pushProcessors($container, $logger);
 
-        // Alternative access to logger **not encouraged**
-        Registry::addLogger($logger);
-
         return $logger;
     }
 
@@ -81,15 +77,15 @@ class LoggerFactory
             return;
         }
 
-        foreach ($config[ProcessorsConfigProvider::class] as $processorClass) {
-            if ($processorClass === ProcessorsConfigProvider::class) {
+        foreach ($config[ConfigProvider::class] as $processorClass) {
+            if ($processorClass === ConfigProvider::class) {
                 continue;
             }
 
             try {
                 $processor = $container->get($processorClass);
-            } catch (ContainerExceptionInterface $exception) {
-                continue;
+            } catch (\Throwable $exception) {
+                continue; // @TODO log exception!?
             }
 
             $logger->pushProcessor($processor);

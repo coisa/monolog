@@ -8,22 +8,19 @@
  * with this source code in the file LICENSE.
  */
 
-namespace CoiSA\Monolog\Container\ConfigProvider;
+namespace CoiSA\Monolog\Handler;
 
-use CoiSA\Monolog\Container\Factory;
-use CoiSA\Monolog\Http\Middleware\AccessLogMiddleware;
-use CoiSA\Monolog\Http\Middleware\LoggerAwareMiddleware;
+use Raven_Client;
+use Monolog\Handler;
 
 /**
- * Class MiddlewareConfigProvider
+ * Class ConfigProvider
  *
- * @package CoiSA\Monolog\Container\ConfigProvider
+ * @package CoiSA\Monolog\Handler
  */
-final class MiddlewareConfigProvider
+class ConfigProvider
 {
     /**
-     * Return config mappings for the Logger
-     *
      * @return array
      */
     public function __invoke(): array
@@ -34,16 +31,13 @@ final class MiddlewareConfigProvider
     }
 
     /**
-     * Return dependency mappings for the Logger
-     *
      * @return array
      */
     public function getDependencies()
     {
         return [
             'factories' => [
-                AccessLogMiddleware::class   => Factory\AccessLogMiddlewareFactory::class,
-                LoggerAwareMiddleware::class => Factory\LoggerAwareMiddlewareFactory::class,
+                Handler\StreamHandler::class => StreamHandlerFactory::class,
             ],
         ];
     }
