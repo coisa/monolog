@@ -12,7 +12,6 @@ namespace CoiSA\Monolog\Container\ConfigProvider;
 
 use CoiSA\Monolog\Container\Factory;
 use Monolog\Handler;
-use Raven_Client;
 
 /**
  * Class HandlersConfigProvider

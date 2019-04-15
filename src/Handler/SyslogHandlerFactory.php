@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace CoiSA\Monolog\Container\Factory;
+namespace CoiSA\Monolog\Handler;
 
 use Monolog\Handler\SyslogHandler;
 use Psr\Container\ContainerInterface;
