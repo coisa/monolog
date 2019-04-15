@@ -46,10 +46,8 @@ class HandlersConfigProvider
                 Raven_Client::class => Raven_Client::class
             ],
             'factories'  => [
-                Handler\StreamHandler::class => Factory\StreamHandlerFactory::class,
                 Handler\SyslogHandler::class => Factory\SyslogHandlerFactory::class,
                 Handler\RedisHandler::class  => Factory\RedisHandlerFactory::class,
-                Handler\RavenHandler::class  => Factory\RavenHandlerFactory::class,
             ],
         ];
     }

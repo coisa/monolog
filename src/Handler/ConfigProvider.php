@@ -37,6 +37,7 @@ class ConfigProvider
         return [
             'factories' => [
                 Handler\StreamHandler::class => StreamHandlerFactory::class,
+                Handler\RavenHandler::class => RavenHandlerFactory::class,
             ],
         ];
     }

@@ -33,6 +33,7 @@ final class ConfigProviderTest extends TestCase
     {
         return [
             [Handler\StreamHandler::class],
+            [Handler\RavenHandler::class],
         ];
     }
 
