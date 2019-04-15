@@ -14,10 +14,8 @@ declare(strict_types=1);
 namespace CoiSA\Monolog\Container\Factory;
 
 use CoiSA\Monolog\Processor\ConfigProvider;
-use Monolog\Handler\HandlerInterface;
-use Monolog\Handler\NullHandler;
+use CoiSA\Monolog\Strategy\StrategyInterface;
 use Monolog\Logger;
-use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 
 /**
@@ -58,8 +56,9 @@ class LoggerFactory
     {
         $logger = new Logger($this->name);
 
-        $handler = $this->getHandler($container);
-        $logger->pushHandler($handler);
+        $logger->pushHandler(
+            $container->get(StrategyInterface::class)
+        );
 
         $this->pushProcessors($container, $logger);
 
@@ -74,11 +73,7 @@ class LoggerFactory
      */
     private function pushProcessors(ContainerInterface $container, Logger $logger): void
     {
-        try {
-            $config = $container->get('config');
-        } catch (ContainerExceptionInterface $exception) {
-            return;
-        }
+        $config = $container->get('config');
 
         foreach ($config[ConfigProvider::class] as $processorClass) {
             if ($processorClass === ConfigProvider::class) {
@@ -93,21 +88,5 @@ class LoggerFactory
 
             $logger->pushProcessor($processor);
         }
-    }
-
-    /**
-     * @param ContainerInterface $container
-     *
-     * @return HandlerInterface
-     */
-    private function getHandler(ContainerInterface $container): HandlerInterface
-    {
-        try {
-            $handler = $container->get(HandlerInterface::class);
-        } catch (ContainerExceptionInterface $exception) {
-            $handler = new NullHandler();
-        }
-
-        return $handler;
     }
 }

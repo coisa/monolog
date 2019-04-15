@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace CoiSA\Monolog\ServiceManager\Initializer;
 
 use Interop\Container\ContainerInterface;
-use Psr\Container\ContainerExceptionInterface;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
 use Zend\ServiceManager\Initializer\InitializerInterface;

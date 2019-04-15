@@ -44,6 +44,7 @@ final class ConfigProvider
             Handler\ConfigProvider::class,
             Middleware\ConfigProvider::class,
             Processor\ConfigProvider::class,
+            ServiceManager\ConfigProvider::class,
             Strategy\ConfigProvider::class,
 
             LoggerConfigProvider::class,

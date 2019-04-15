@@ -60,13 +60,13 @@ abstract class ContainerTest extends TestCase
         $services = \array_keys(\array_merge(...\array_values($dependencies)));
 
         $services = \array_filter($services, function ($serviceName) {
-            $notStrictDependecies = [
+            $ignore = [
                 RedisHandler::class,
                 RavenHandler::class,
                 StrategyInterface::class,
             ];
 
-            return false === \in_array($serviceName, $notStrictDependecies);
+            return false === \in_array($serviceName, $ignore);
         }, ARRAY_FILTER_USE_BOTH);
 
         return \array_map(function ($serviceName) use ($dependencies) {

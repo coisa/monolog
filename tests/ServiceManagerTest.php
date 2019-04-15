@@ -31,6 +31,9 @@ final class ServiceManagerTest extends ContainerTest
     {
         $configProvider = new ConfigProvider();
 
-        return new ServiceManager($configProvider->getDependencies());
+        $container = new ServiceManager($configProvider->getDependencies());
+        $container->setService('config', $configProvider());
+
+        return $container;
     }
 }
