@@ -12,7 +12,6 @@ namespace CoiSA\Monolog\Test;
 
 use CoiSA\Monolog\ConfigProvider;
 use CoiSA\Monolog\Container\ConfigProvider\LoggerConfigProvider;
-use CoiSA\Monolog\Container\ConfigProvider\StrategiesConfigProvider;
 use CoiSA\Monolog\StrategyInterface;
 use PHPUnit\Framework\TestCase;
 
@@ -40,8 +39,6 @@ final class ConfigProviderTest extends TestCase
             [\CoiSA\Monolog\Processor\ConfigProvider::class],
 
             [LoggerConfigProvider::class],
-            [StrategiesConfigProvider::class],
-            [ConfigProvider::class],
         ];
     }
 

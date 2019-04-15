@@ -8,14 +8,11 @@
  * with this source code in the file LICENSE.
  */
 
-namespace CoiSA\Monolog\Container\Factory;
+namespace CoiSA\Monolog\Handler;
 
 use Monolog\Handler\FingersCrossedHandler;
-use Monolog\Handler\GroupHandler;
-use Monolog\Handler\HandlerInterface;
-use Monolog\Handler\NullHandler;
+use Monolog\Handler\WhatFailureGroupHandler;
 use Monolog\Logger;
-use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 
 /**
@@ -23,23 +20,20 @@ use Psr\Container\ContainerInterface;
  *
  * @package CoiSA\Monolog\Container\Factory
  */
-class FingersCrossedHandlerFactory
+final class FingersCrossedHandlerFactory
 {
     /**
      * Fingers crossed handler service factory
      *
      * @param ContainerInterface $container
      *
-     * @return HandlerInterface
+     * @return FingersCrossedHandler
      */
-    public function __invoke(ContainerInterface $container): HandlerInterface
+    public function __invoke(ContainerInterface $container): FingersCrossedHandler
     {
-        try {
-            $handler = $container->get(GroupHandler::class);
-        } catch (ContainerExceptionInterface $exception) {
-            return new NullHandler();
-        }
-
-        return new FingersCrossedHandler($handler, Logger::ERROR);
+        return new FingersCrossedHandler(
+            $container->get(WhatFailureGroupHandler::class),
+            Logger::ERROR
+        );
     }
 }

@@ -20,7 +20,7 @@ use Monolog\Handler;
 interface StrategyInterface
 {
     /** @const string Eager log entry write strategy */
-    const EAGER = Handler\GroupHandler::class;
+    const EAGER = Handler\WhatFailureGroupHandler::class;
 
     /** @const string Waiting for an error log entry write strategy */
     const OPTIMISTIC = Handler\FingersCrossedHandler::class;

@@ -127,8 +127,9 @@ final class WhatFailureGroupHandlerFactory
     /**
      * @param $config
      *
-     * @return array
      * @throws \ReflectionException
+     *
+     * @return array
      */
     private function getCandidates($config): array
     {
@@ -140,11 +141,11 @@ final class WhatFailureGroupHandlerFactory
         $interface = new \ReflectionClass(StrategyInterface::class);
         $constants = $interface->getConstants();
 
-        $ignore = array_merge($constants, [
+        $ignore = \array_merge($constants, [
             WhatFailureGroupHandler::class,
         ]);
 
-        $dependencies = array_diff($dependencies, $ignore);
+        $dependencies = \array_diff($dependencies, $ignore);
 
         return $dependencies;
     }

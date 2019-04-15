@@ -41,13 +41,16 @@ class ConfigProvider
                 GroupHandler::class => Handler\WhatFailureGroupHandler::class,
             ],
             'invokables' => [
-                Raven_Client::class => Raven_Client::class
+                Raven_Client::class => Raven_Client::class,
             ],
             'factories' => [
-                Handler\StreamHandler::class           => StreamHandlerFactory::class,
-                Handler\RavenHandler::class            => RavenHandlerFactory::class,
-                Handler\SyslogHandler::class           => SyslogHandlerFactory::class,
+                Handler\BufferHandler::class           => BufferHandlerFactory::class,
+                Handler\DeduplicationHandler::class    => DeduplicationHandlerFactory::class,
+                Handler\FingersCrossedHandler::class   => FingersCrossedHandlerFactory::class,
                 Handler\RedisHandler::class            => RedisHandlerFactory::class,
+                Handler\RavenHandler::class            => RavenHandlerFactory::class,
+                Handler\StreamHandler::class           => StreamHandlerFactory::class,
+                Handler\SyslogHandler::class           => SyslogHandlerFactory::class,
                 Handler\WhatFailureGroupHandler::class => WhatFailureGroupHandlerFactory::class,
             ],
         ];
