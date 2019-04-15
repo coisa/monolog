@@ -18,7 +18,7 @@ use Psr\Container\ContainerInterface;
  *
  * @package CoiSA\Monolog\Container\Factory
  */
-class SyslogHandlerFactory
+final class SyslogHandlerFactory
 {
     /**
      * Syslog handler service factory

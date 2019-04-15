@@ -42,11 +42,7 @@ class HandlersConfigProvider
     public function getDependencies()
     {
         return [
-            'invokables' => [
-                Raven_Client::class => Raven_Client::class
-            ],
             'factories'  => [
-                Handler\SyslogHandler::class => Factory\SyslogHandlerFactory::class,
                 Handler\RedisHandler::class  => Factory\RedisHandlerFactory::class,
             ],
         ];

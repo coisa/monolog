@@ -10,7 +10,9 @@
 
 namespace CoiSA\Monolog\Handler;
 
+use CoiSA\Monolog\Container\Factory\SyslogHandlerFactory;
 use Monolog\Handler;
+use Raven_Client;
 
 /**
  * Class ConfigProvider
@@ -35,9 +37,13 @@ class ConfigProvider
     public function getDependencies()
     {
         return [
+            'invokables' => [
+                Raven_Client::class => Raven_Client::class
+            ],
             'factories' => [
                 Handler\StreamHandler::class => StreamHandlerFactory::class,
                 Handler\RavenHandler::class  => RavenHandlerFactory::class,
+                Handler\SyslogHandler::class => SyslogHandlerFactory::class,
             ],
         ];
     }
