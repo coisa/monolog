@@ -38,7 +38,7 @@ final class AccessLogMiddlewareFactoryTest extends TestCase
     public function setUp(): void
     {
         $this->container = $this->prophesize(ContainerInterface::class);
-        $this->logger = $this->prophesize(LoggerInterface::class);
+        $this->logger    = $this->prophesize(LoggerInterface::class);
 
         $this->factory = new AccessLogMiddlewareFactory();
 

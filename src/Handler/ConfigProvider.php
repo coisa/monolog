@@ -10,7 +10,6 @@
 
 namespace CoiSA\Monolog\Handler;
 
-use Raven_Client;
 use Monolog\Handler;
 
 /**

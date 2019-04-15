@@ -11,7 +11,6 @@
 namespace CoiSA\Monolog\Test;
 
 use CoiSA\Monolog\ConfigProvider;
-use CoiSA\Monolog\Container\ConfigProvider\HandlersConfigProvider;
 use CoiSA\Monolog\Container\ConfigProvider\LoggerConfigProvider;
 use CoiSA\Monolog\Container\ConfigProvider\StrategiesConfigProvider;
 use CoiSA\Monolog\StrategyInterface;

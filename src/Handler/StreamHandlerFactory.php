@@ -10,10 +10,7 @@
 
 namespace CoiSA\Monolog\Handler;
 
-use Monolog\Handler\HandlerInterface;
-use Monolog\Handler\NullHandler;
 use Monolog\Handler\StreamHandler;
-use Monolog\Logger;
 use Psr\Container\ContainerInterface;
 
 /**
@@ -26,8 +23,9 @@ class StreamHandlerFactory
     /**
      * @param ContainerInterface $container
      *
-     * @return StreamHandler
      * @throws \Exception
+     *
+     * @return StreamHandler
      */
     public function __invoke(ContainerInterface $container): StreamHandler
     {
@@ -36,12 +34,12 @@ class StreamHandlerFactory
         if ($container->has('config')) {
             $config = $container->get('config');
 
-            if (!array_key_exists(self::class, $config)) {
+            if (!\array_key_exists(self::class, $config)) {
                 return new StreamHandler($stream);
             }
 
-            if (!is_string($config[self::class])
-                && !is_resource($config[self::class])
+            if (!\is_string($config[self::class])
+                && !\is_resource($config[self::class])
             ) {
                 return new StreamHandler($stream);
             }

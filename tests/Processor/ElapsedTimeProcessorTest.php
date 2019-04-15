@@ -10,11 +10,8 @@
 
 namespace CoiSA\Monolog\Test\Processor;
 
-use CoiSA\Monolog\Git\LogInfoGit;
 use CoiSA\Monolog\Processor\ElapsedTimeProcessor;
-use CoiSA\Monolog\Processor\GitProcessor;
 use PHPUnit\Framework\TestCase;
-use Prophecy\Prophecy\ObjectProphecy;
 
 /**
  * Class GitProcessorTest

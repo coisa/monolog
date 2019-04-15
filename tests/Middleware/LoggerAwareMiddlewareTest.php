@@ -29,13 +29,13 @@ final class LoggerAwareMiddlewareTest extends TestCase
     /** @var LoggerInterface|ObjectProphecy */
     private $logger;
 
-    /** @var ServerRequestInterface|ObjectProphecy */
+    /** @var ObjectProphecy|ServerRequestInterface */
     private $serverRequest;
 
-    /** @var RequestHandlerInterface|ObjectProphecy */
+    /** @var ObjectProphecy|RequestHandlerInterface */
     private $requestHandler;
 
-    /** @var ResponseInterface|ObjectProphecy */
+    /** @var ObjectProphecy|ResponseInterface */
     private $response;
 
     /** @var LoggerAwareMiddleware */
@@ -43,10 +43,10 @@ final class LoggerAwareMiddlewareTest extends TestCase
 
     public function setUp(): void
     {
-        $this->logger = $this->prophesize(LoggerInterface::class);
-        $this->serverRequest = $this->prophesize(ServerRequestInterface::class);
+        $this->logger         = $this->prophesize(LoggerInterface::class);
+        $this->serverRequest  = $this->prophesize(ServerRequestInterface::class);
         $this->requestHandler = $this->prophesize(RequestHandlerInterface::class);
-        $this->response = $this->prophesize(ResponseInterface::class);
+        $this->response       = $this->prophesize(ResponseInterface::class);
 
         $this->middleware = new LoggerAwareMiddleware($this->logger->reveal());
 
@@ -56,7 +56,7 @@ final class LoggerAwareMiddlewareTest extends TestCase
         $this->requestHandler->setLogger($this->logger->reveal())->shouldBeCalledOnce();
     }
 
-    public function testConstructWithWrongArgumentRaiseTypeError()
+    public function testConstructWithWrongArgumentRaiseTypeError(): void
     {
         $this->requestHandler->handle($this->serverRequest->reveal())->shouldNotBeCalled();
         $this->requestHandler->setLogger($this->logger->reveal())->shouldNotBeCalled();
@@ -65,7 +65,7 @@ final class LoggerAwareMiddlewareTest extends TestCase
         new LoggerAwareMiddleware(new \stdClass());
     }
 
-    public function testProcessReturnRequestHandlerResponse()
+    public function testProcessReturnRequestHandlerResponse(): void
     {
         $response = $this->middleware->process($this->serverRequest->reveal(), $this->requestHandler->reveal());
 

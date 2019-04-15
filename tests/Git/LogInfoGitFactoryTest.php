@@ -12,10 +12,7 @@ namespace CoiSA\Monolog\Test\Git;
 
 use CoiSA\Monolog\Git\LogInfoGit;
 use CoiSA\Monolog\Git\LogInfoGitFactory;
-use CoiSA\Monolog\Processor\GitProcessor;
-use CoiSA\Monolog\Processor\GitProcessorFactory;
 use Gitonomy\Git\Repository;
-use Monolog\Processor\ProcessorInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Container\ContainerInterface;

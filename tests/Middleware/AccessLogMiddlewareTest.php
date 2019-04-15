@@ -11,7 +11,6 @@
 namespace CoiSA\Monolog\Test\Middleware;
 
 use CoiSA\Monolog\Middleware\AccessLogMiddleware;
-use CoiSA\Monolog\Middleware\AccessLogMiddlewareFactory;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
@@ -30,13 +29,13 @@ final class AccessLogMiddlewareTest extends TestCase
     /** @var LoggerInterface|ObjectProphecy */
     private $logger;
 
-    /** @var ServerRequestInterface|ObjectProphecy */
+    /** @var ObjectProphecy|ServerRequestInterface */
     private $serverRequest;
 
-    /** @var RequestHandlerInterface|ObjectProphecy */
+    /** @var ObjectProphecy|RequestHandlerInterface */
     private $requestHandler;
 
-    /** @var ResponseInterface|ObjectProphecy */
+    /** @var ObjectProphecy|ResponseInterface */
     private $response;
 
     /** @var AccessLogMiddleware */
@@ -44,21 +43,21 @@ final class AccessLogMiddlewareTest extends TestCase
 
     public function setUp(): void
     {
-        $this->logger = $this->prophesize(LoggerInterface::class);
-        $this->serverRequest = $this->prophesize(ServerRequestInterface::class);
+        $this->logger         = $this->prophesize(LoggerInterface::class);
+        $this->serverRequest  = $this->prophesize(ServerRequestInterface::class);
         $this->requestHandler = $this->prophesize(RequestHandlerInterface::class);
-        $this->response = $this->prophesize(ResponseInterface::class);
+        $this->response       = $this->prophesize(ResponseInterface::class);
 
         $this->middleware = new AccessLogMiddleware($this->logger->reveal());
     }
 
-    public function testConstructWithWrongArgumentRaiseTypeError()
+    public function testConstructWithWrongArgumentRaiseTypeError(): void
     {
         $this->expectException(\TypeError::class);
         new AccessLogMiddleware(new \stdClass());
     }
 
-    public function testProcessReturnRequestHandlerResponse()
+    public function testProcessReturnRequestHandlerResponse(): void
     {
         $this->logger->info(Argument::type('string'), Argument::type('array'))->shouldBeCalledOnce();
         $this->requestHandler->handle($this->serverRequest->reveal())->shouldBeCalledOnce()->will([$this->response, 'reveal']);

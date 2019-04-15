@@ -11,20 +11,13 @@
 namespace CoiSA\Monolog\Test\Git;
 
 use CoiSA\Monolog\Git\LogInfoGit;
-use CoiSA\Monolog\Git\LogInfoGitFactory;
-use CoiSA\Monolog\Processor\GitProcessor;
-use CoiSA\Monolog\Processor\GitProcessorFactory;
 use Gitonomy\Git\Commit;
 use Gitonomy\Git\Reference\Branch;
 use Gitonomy\Git\Reference\Tag;
 use Gitonomy\Git\ReferenceBag;
 use Gitonomy\Git\Repository;
-use Monolog\Processor\ProcessorInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Prophecy\ObjectProphecy;
-use Psr\Container\ContainerInterface;
-use Psr\Container\NotFoundExceptionInterface;
-use Zend\ServiceManager\Exception\ServiceNotFoundException;
 
 /**
  * Class LogInfoGitTest
@@ -36,7 +29,7 @@ final class LogInfoGitTest extends TestCase
     /** @var LogInfoGit|ObjectProphecy */
     private $repository;
 
-    /** @var ReferenceBag|ObjectProphecy */
+    /** @var ObjectProphecy|ReferenceBag */
     private $referenceBag;
 
     /** @var Branch|ObjectProphecy */
@@ -45,7 +38,7 @@ final class LogInfoGitTest extends TestCase
     /** @var Commit|ObjectProphecy */
     private $commit;
 
-    /** @var Tag|ObjectProphecy */
+    /** @var ObjectProphecy|Tag */
     private $tag;
 
     /** @var LogInfoGit */
@@ -53,11 +46,11 @@ final class LogInfoGitTest extends TestCase
 
     public function setUp(): void
     {
-        $this->repository = $this->prophesize(Repository::class);
+        $this->repository   = $this->prophesize(Repository::class);
         $this->referenceBag = $this->prophesize(ReferenceBag::class);
-        $this->branch = $this->prophesize(Branch::class);
-        $this->commit = $this->prophesize(Commit::class);
-        $this->tag = $this->prophesize(Tag::class);
+        $this->branch       = $this->prophesize(Branch::class);
+        $this->commit       = $this->prophesize(Commit::class);
+        $this->tag          = $this->prophesize(Tag::class);
 
         $this->repository->isBare()->willReturn(false);
         $this->repository->getReferences()->will([$this->referenceBag, 'reveal']);
@@ -66,14 +59,14 @@ final class LogInfoGitTest extends TestCase
         $this->referenceBag->getBranches()->willReturn([$this->branch->reveal()]);
         $this->referenceBag->getTags()->willReturn([$this->tag->reveal()]);
 
-        $this->branch->getName()->willReturn(uniqid('branch', true));
-        $this->commit->getHash()->willReturn(uniqid('hash', true));
-        $this->tag->getName()->willReturn(uniqid('tag', true));
+        $this->branch->getName()->willReturn(\uniqid('branch', true));
+        $this->commit->getHash()->willReturn(\uniqid('hash', true));
+        $this->tag->getName()->willReturn(\uniqid('tag', true));
 
         $this->logInfoGit = new LogInfoGit($this->repository->reveal());
     }
 
-    public function testConstructWithBareRepositoryRaisesRuntimeException()
+    public function testConstructWithBareRepositoryRaisesRuntimeException(): void
     {
         $this->expectException(\RuntimeException::class);
         $this->repository->isBare()->willReturn(true);
@@ -81,28 +74,28 @@ final class LogInfoGitTest extends TestCase
         new LogInfoGit($this->repository->reveal());
     }
 
-    public function testGetCurrentBranchReturnRepositoryReferenceFirstBranchName()
+    public function testGetCurrentBranchReturnRepositoryReferenceFirstBranchName(): void
     {
         $branch = $this->branch->reveal();
 
         $this->assertSame($branch->getName(), $this->logInfoGit->getCurrentBranch());
     }
 
-    public function testGetCommitReturnRepositoryCommitHash()
+    public function testGetCommitReturnRepositoryCommitHash(): void
     {
         $commit = $this->commit->reveal();
 
         $this->assertSame($commit->getHash(), $this->logInfoGit->getCommit());
     }
 
-    public function testGetReleaseReturnRepositoryLastTag()
+    public function testGetReleaseReturnRepositoryLastTag(): void
     {
         $tag = $this->tag->reveal();
 
         $this->assertSame($tag->getName(), $this->logInfoGit->getRelease());
     }
 
-    public function testGetReleaseReturnNullWithoutRepositoryTag()
+    public function testGetReleaseReturnNullWithoutRepositoryTag(): void
     {
         $this->referenceBag->getTags()->willReturn([]);
 

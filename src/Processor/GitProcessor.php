@@ -69,7 +69,7 @@ final class GitProcessor implements ProcessorInterface
      */
     private function getCachedExtra(): array
     {
-        if (is_array($this->cache)) {
+        if (\is_array($this->cache)) {
             return $this->cache;
         }
 

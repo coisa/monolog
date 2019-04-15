@@ -49,7 +49,7 @@ class LogInfoGit
     public function getCurrentBranch(): ?string
     {
         /** @var Branch[] $branches */
-        $branches = $this->repository->getReferences()->getBranches();
+        $branches      = $this->repository->getReferences()->getBranches();
         $currentBranch = \current($branches);
 
         return $currentBranch->getName();
