@@ -30,7 +30,7 @@ final class RavenHandlerFactoryTest extends TestCase
     /** @var ContainerInterface|ObjectProphecy */
     private $container;
 
-    /** @var Raven_Client|ObjectProphecy */
+    /** @var ObjectProphecy|Raven_Client */
     private $ravenClient;
 
     /** @var RavenHandlerFactory */
@@ -38,7 +38,7 @@ final class RavenHandlerFactoryTest extends TestCase
 
     public function setUp(): void
     {
-        $this->container = $this->prophesize(ContainerInterface::class);
+        $this->container   = $this->prophesize(ContainerInterface::class);
         $this->ravenClient = $this->prophesize(Raven_Client::class);
 
         $this->factory = new RavenHandlerFactory();

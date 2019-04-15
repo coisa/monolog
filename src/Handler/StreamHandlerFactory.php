@@ -36,9 +36,9 @@ final class StreamHandlerFactory
 
     /**
      * @param ContainerInterface $container
-     * @param string $default
+     * @param string             $default
      *
-     * @return string|resource
+     * @return resource|string
      */
     private function getStream(ContainerInterface $container, string $default = 'php://stdout')
     {
