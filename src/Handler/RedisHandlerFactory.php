@@ -10,27 +10,30 @@
 
 namespace CoiSA\Monolog\Handler;
 
-use Monolog\Handler\SyslogHandler;
+use Monolog\Handler\RedisHandler;
 use Psr\Container\ContainerInterface;
 
 /**
- * Class SyslogHandlerFactory
+ * Class RedisHandlerFactory
  *
- * @package CoiSA\Monolog\Handler
+ * @package CoiSA\Monolog\Container\Factory
  */
-final class SyslogHandlerFactory
+final class RedisHandlerFactory
 {
     /**
-     * Syslog handler service factory
-     *
      * @param ContainerInterface $container
      *
-     * @return SyslogHandler
+     * @return RedisHandler
+     *
+     * @throws \InvalidArgumentException
      */
-    public function __invoke(ContainerInterface $container): SyslogHandler
+    public function __invoke(ContainerInterface $container): RedisHandler
     {
-        return new SyslogHandler(
-            $this->getIdentity($container)
+        $key = $this->getKey($container);
+
+        return new RedisHandler(
+            $container->get(\Redis::class),
+            $key
         );
     }
 
@@ -40,7 +43,7 @@ final class SyslogHandlerFactory
      *
      * @return string
      */
-    private function getIdentity(ContainerInterface $container, string $default = 'monolog'): string
+    private function getKey(ContainerInterface $container, string $default = 'monolog'): string
     {
         if (!$container->has('config')) {
             return $default;

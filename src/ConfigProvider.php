@@ -43,7 +43,6 @@ final class ConfigProvider
             ]),
             LoggerConfigProvider::class,
             StrategiesConfigProvider::class,
-            HandlersConfigProvider::class,
             Git\ConfigProvider::class,
             Handler\ConfigProvider::class,
             Processor\ConfigProvider::class,

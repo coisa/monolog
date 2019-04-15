@@ -10,7 +10,6 @@
 
 namespace CoiSA\Monolog\Handler;
 
-use CoiSA\Monolog\Container\Factory\SyslogHandlerFactory;
 use Monolog\Handler;
 use Raven_Client;
 
@@ -27,7 +26,8 @@ class ConfigProvider
     public function __invoke(): array
     {
         return [
-            'dependencies' => $this->getDependencies()
+            'dependencies' => $this->getDependencies(),
+            Handler\GroupHandler::class => \array_keys(\array_merge(...\array_values($this->getDependencies())))
         ];
     }
 
@@ -44,6 +44,7 @@ class ConfigProvider
                 Handler\StreamHandler::class => StreamHandlerFactory::class,
                 Handler\RavenHandler::class  => RavenHandlerFactory::class,
                 Handler\SyslogHandler::class => SyslogHandlerFactory::class,
+                Handler\RedisHandler::class  => RedisHandlerFactory::class,
             ],
         ];
     }
