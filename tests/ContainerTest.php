@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace CoiSA\Monolog\Test;
 
 use CoiSA\Monolog\ConfigProvider;
+use CoiSA\Monolog\Strategy\StrategyInterface;
 use Monolog\Handler\RavenHandler;
 use Monolog\Handler\RedisHandler;
 use PHPUnit\Framework\TestCase;
@@ -62,6 +63,7 @@ abstract class ContainerTest extends TestCase
             $notStrictDependecies = [
                 RedisHandler::class,
                 RavenHandler::class,
+                StrategyInterface::class,
             ];
 
             return false === \in_array($serviceName, $notStrictDependecies);

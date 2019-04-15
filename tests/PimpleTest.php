@@ -22,7 +22,7 @@ use Psr\Container\ContainerInterface;
  *
  * @package CoiSA\Monolog\Test
  */
-class PimpleTest extends ContainerTest
+final class PimpleTest extends ContainerTest
 {
     /**
      * @return ContainerInterface

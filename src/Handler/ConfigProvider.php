@@ -49,6 +49,7 @@ class ConfigProvider
             'factories' => [
                 Handler\BufferHandler::class           => BufferHandlerFactory::class,
                 Handler\DeduplicationHandler::class    => DeduplicationHandlerFactory::class,
+                Handler\ErrorLogHandler::class         => ErrorLogHandlerFactory::class,
                 Handler\FingersCrossedHandler::class   => FingersCrossedHandlerFactory::class,
                 Handler\RedisHandler::class            => RedisHandlerFactory::class,
                 Handler\RavenHandler::class            => RavenHandlerFactory::class,

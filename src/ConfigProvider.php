@@ -34,19 +34,19 @@ final class ConfigProvider
      *
      * @param null|string $strategy optional Default handler strategy
      */
-    public function __construct(?string $strategy = StrategyInterface::EAGER)
+    public function __construct(?string $strategy = Strategy\StrategyInterface::EAGER)
     {
         $this->config = new ConfigAggregator([
             new ArrayProvider([
-                __CLASS__ => [
-                    'strategy' => $strategy
-                ],
+                Strategy\StrategyInterface::class => $strategy,
             ]),
-            LoggerConfigProvider::class,
             Git\ConfigProvider::class,
             Handler\ConfigProvider::class,
             Middleware\ConfigProvider::class,
             Processor\ConfigProvider::class,
+            Strategy\ConfigProvider::class,
+
+            LoggerConfigProvider::class,
         ]);
     }
 

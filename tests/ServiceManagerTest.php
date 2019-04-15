@@ -22,7 +22,7 @@ use Zend\ServiceManager\ServiceManager;
  *
  * @package CoiSA\Monolog\Test
  */
-class ServiceManagerTest extends ContainerTest
+final class ServiceManagerTest extends ContainerTest
 {
     /**
      * @return ContainerInterface

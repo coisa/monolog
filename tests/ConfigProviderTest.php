@@ -15,7 +15,7 @@ namespace CoiSA\Monolog\Test;
 
 use CoiSA\Monolog\ConfigProvider;
 use CoiSA\Monolog\Container\ConfigProvider\LoggerConfigProvider;
-use CoiSA\Monolog\StrategyInterface;
+use CoiSA\Monolog\Strategy\StrategyInterface;
 use PHPUnit\Framework\TestCase;
 use Zend\Stdlib\ArrayUtils;
 
@@ -63,7 +63,7 @@ final class ConfigProviderTest extends TestCase
 
         $config = ($this->configProvider)();
 
-        $this->assertSame($strategy, $config[ConfigProvider::class]['strategy']);
+        $this->assertSame($strategy, $config[StrategyInterface::class]);
     }
 
     public function testMethodInvokeReturnArray()
@@ -82,7 +82,7 @@ final class ConfigProviderTest extends TestCase
         $object = new $namespace();
 
         $provided = ($this->configProvider)();
-        $config  = ($object)();
+        $config   = ($object)();
 
         $merged = ArrayUtils::merge($provided, $config, true);
 
@@ -92,14 +92,10 @@ final class ConfigProviderTest extends TestCase
     /**
      * @depends testMethodInvokeReturnArray
      */
-    public function testMethodInvokeReturnArrayWithClassConfig(array $config)
+    public function testMethodInvokeReturnArrayWithStrategy(array $config): void
     {
-        $index = \get_class($this->configProvider);
-
-        $this->assertArrayHasKey($index, $config);
-        $this->assertIsArray($config[$index]);
-
-        return $config[$index];
+        $this->assertArrayHasKey(StrategyInterface::class, $config);
+        $this->assertIsString($config[StrategyInterface::class]);
     }
 
     /**

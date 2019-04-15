@@ -11,7 +11,7 @@
 
 declare(strict_types=1);
 
-namespace CoiSA\Monolog\Container\Factory;
+namespace CoiSA\Monolog\Handler;
 
 use Monolog\Handler\ErrorLogHandler;
 use Monolog\Logger;
@@ -20,9 +20,9 @@ use Psr\Container\ContainerInterface;
 /**
  * Class ErrorLogHandlerFactory
  *
- * @package CoiSA\Monolog\Container\Factory
+ * @package CoiSA\Monolog\Handler
  */
-class ErrorLogHandlerFactory
+final class ErrorLogHandlerFactory
 {
     /**
      * Error log handler service factory

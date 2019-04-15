@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace CoiSA\Monolog\Handler;
 
-use CoiSA\Monolog\StrategyInterface;
+use CoiSA\Monolog\Strategy\StrategyInterface;
 use Monolog\Handler\HandlerInterface;
 use Monolog\Handler\NullHandler;
 use Monolog\Handler\WhatFailureGroupHandler;

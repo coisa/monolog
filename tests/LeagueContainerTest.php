@@ -22,7 +22,7 @@ use Psr\Container\ContainerInterface;
  *
  * @package CoiSA\Monolog\Test
  */
-class LeagueContainerTest extends ContainerTest
+final class LeagueContainerTest extends ContainerTest
 {
     /**
      * @return ContainerInterface

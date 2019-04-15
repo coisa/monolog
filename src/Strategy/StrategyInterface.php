@@ -11,14 +11,14 @@
 
 declare(strict_types=1);
 
-namespace CoiSA\Monolog;
+namespace CoiSA\Monolog\Strategy;
 
 use Monolog\Handler;
 
 /**
  * Interface StrategyInterface
  *
- * @package CoiSA\Monolog
+ * @package CoiSA\Monolog\Strategy
  */
 interface StrategyInterface
 {

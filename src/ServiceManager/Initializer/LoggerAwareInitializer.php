@@ -11,7 +11,7 @@
 
 declare(strict_types=1);
 
-namespace CoiSA\Monolog\Container\Initializer;
+namespace CoiSA\Monolog\ServiceManager\Initializer;
 
 use Interop\Container\ContainerInterface;
 use Psr\Container\ContainerExceptionInterface;
@@ -22,9 +22,9 @@ use Zend\ServiceManager\Initializer\InitializerInterface;
 /**
  * Class LoggerAwareInitializer
  *
- * @package CoiSA\Monolog\Container\Initializer
+ * @package CoiSA\Monolog\ServiceManager\Initializer
  */
-class LoggerAwareInitializer implements InitializerInterface
+final class LoggerAwareInitializer implements InitializerInterface
 {
     /**
      * @param ContainerInterface $container
@@ -32,13 +32,12 @@ class LoggerAwareInitializer implements InitializerInterface
      */
     public function __invoke(ContainerInterface $container, $instance): void
     {
-        if ($instance instanceof LoggerAwareInterface) {
-            try {
-                $logger = $container->get(LoggerInterface::class);
-                $instance->setLogger($logger);
-            } catch (ContainerExceptionInterface $exception) {
-                // noop
-            }
+        if (!$instance instanceof LoggerAwareInterface) {
+            return;
         }
+
+        $instance->setLogger(
+            $container->get(LoggerInterface::class)
+        );
     }
 }
