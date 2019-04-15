@@ -59,8 +59,12 @@
         }
     },
     "extra": {
+        "zf": {
+            "component": "CoiSA\\Monolog",
+            "config-provider": "CoiSA\\Monolog\\ConfigProvider"
+        },
         "branch-alias": {
-            "dev-master": "1.0.x-dev"
+            "dev-master": "2.0.x-dev"
         }
     },
     "suggest": {
