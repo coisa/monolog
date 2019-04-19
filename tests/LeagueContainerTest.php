@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace CoiSA\Monolog\Test;
 
+use CoiSA\Monolog\ConfigProvider;
 use CoiSA\Monolog\Container\ServiceProvider\LeagueServiceProvider;
 use League\Container\Container;
 use Psr\Container\ContainerInterface;
@@ -22,7 +23,7 @@ use Psr\Container\ContainerInterface;
  *
  * @package CoiSA\Monolog\Test
  */
-final class LeagueContainerTest extends ContainerTest
+final class LeagueContainerTest extends AbstractContainerTest
 {
     /**
      * @return ContainerInterface
@@ -33,5 +34,10 @@ final class LeagueContainerTest extends ContainerTest
         $container->addServiceProvider(new LeagueServiceProvider());
 
         return $container;
+    }
+
+    protected function getConfig(): array
+    {
+        return (new ConfigProvider())();
     }
 }

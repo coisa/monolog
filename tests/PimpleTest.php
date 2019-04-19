@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace CoiSA\Monolog\Test;
 
+use CoiSA\Monolog\ConfigProvider;
 use CoiSA\Monolog\Container\ServiceProvider\PimpleServiceProvider;
 use Pimple\Container;
 use Psr\Container\ContainerInterface;
@@ -22,7 +23,7 @@ use Psr\Container\ContainerInterface;
  *
  * @package CoiSA\Monolog\Test
  */
-final class PimpleTest extends ContainerTest
+final class PimpleTest extends AbstractContainerTest
 {
     /**
      * @return ContainerInterface
@@ -33,5 +34,10 @@ final class PimpleTest extends ContainerTest
         $pimple->register(new PimpleServiceProvider());
 
         return new \Pimple\Psr11\Container($pimple);
+    }
+
+    protected function getConfig(): array
+    {
+        return (new ConfigProvider())();
     }
 }
