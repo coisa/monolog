@@ -39,6 +39,9 @@ class ConfigProvider
     public function getDependencies(): array
     {
         return [
+            'aliases' => [
+                Processor\ProcessorInterface::class => ProcessorAggregate::class
+            ],
             'invokables' => [
                 Processor\PsrLogMessageProcessor::class   => Processor\PsrLogMessageProcessor::class,
                 Processor\UidProcessor::class             => Processor\UidProcessor::class,
@@ -51,7 +54,8 @@ class ConfigProvider
                 ElapsedTimeProcessor::class               => ElapsedTimeProcessor::class,
             ],
             'factories' => [
-                GitProcessor::class => GitProcessorFactory::class,
+                GitProcessor::class       => GitProcessorFactory::class,
+                ProcessorAggregate::class => ProcessorAggregateFactory::class,
             ],
         ];
     }

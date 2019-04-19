@@ -40,9 +40,9 @@ class ConfigProvider
     {
         return [
             'aliases'      => [
-                'logger'               => Logger::class,
-                'monolog'              => Logger::class,
-                LoggerInterface::class => Logger::class,
+                'logger'                  => Logger::class,
+                'monolog'                 => Logger::class,
+                LoggerInterface::class    => Logger::class,
             ],
             'factories'    => [
                 Logger::class => LoggerFactory::class,

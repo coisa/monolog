@@ -13,9 +13,9 @@ declare(strict_types=1);
 
 namespace CoiSA\Monolog\Log;
 
-use CoiSA\Monolog\Processor\ConfigProvider;
-use CoiSA\Monolog\Strategy\StrategyInterface;
+use Monolog\Handler\HandlerInterface;
 use Monolog\Logger;
+use Monolog\Processor\ProcessorInterface;
 use Psr\Container\ContainerInterface;
 
 /**
@@ -56,37 +56,39 @@ final class LoggerFactory
     {
         $logger = new Logger($this->name);
 
-        $logger->pushHandler(
-            $container->get(StrategyInterface::class)
-        );
-
-        $this->pushProcessors($container, $logger);
+        $this->setHandler($logger, $container);
+        $this->setProcessor($logger, $container);
 
         return $logger;
     }
 
     /**
-     * Set logger processors
-     *
-     * @param ContainerInterface $container
      * @param Logger             $logger
+     * @param ContainerInterface $container
      */
-    private function pushProcessors(ContainerInterface $container, Logger $logger): void
+    private function setHandler(Logger $logger, ContainerInterface $container): void
     {
-        $config = $container->get('config');
-
-        foreach ($config[ConfigProvider::class] as $processorClass) {
-            if ($processorClass === ConfigProvider::class) {
-                continue;
-            }
-
-            try {
-                $processor = $container->get($processorClass);
-            } catch (\Throwable $exception) {
-                continue; // @TODO log exception!?
-            }
-
-            $logger->pushProcessor($processor);
+        if (!$container->has(ProcessorInterface::class)) {
+            return;
         }
+
+        $logger->pushHandler(
+            $container->get(HandlerInterface::class)
+        );
+    }
+
+    /**
+     * @param Logger             $logger
+     * @param ContainerInterface $container
+     */
+    private function setProcessor(Logger $logger, ContainerInterface $container): void
+    {
+        if (!$container->has(HandlerInterface::class)) {
+            return;
+        }
+
+        $logger->pushProcessor(
+            $container->get(ProcessorInterface::class)
+        );
     }
 }
