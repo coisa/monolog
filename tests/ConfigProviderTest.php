@@ -14,9 +14,7 @@ declare(strict_types=1);
 namespace CoiSA\Monolog\Test;
 
 use CoiSA\Monolog\ConfigProvider;
-use CoiSA\Monolog\Container\ConfigProvider\LoggerConfigProvider;
 use CoiSA\Monolog\Strategy\StrategyInterface;
-use PHPUnit\Framework\TestCase;
 use Zend\Stdlib\ArrayUtils;
 
 /**
@@ -24,7 +22,7 @@ use Zend\Stdlib\ArrayUtils;
  *
  * @package CoiSA\Monolog\Test
  */
-final class ConfigProviderTest extends TestCase
+final class ConfigProviderTest extends AbstractConfigProviderTest
 {
     /** @var ConfigProvider */
     private $configProvider;
@@ -43,12 +41,10 @@ final class ConfigProviderTest extends TestCase
             [\CoiSA\Monolog\Processor\ConfigProvider::class],
             [\CoiSA\Monolog\ServiceManager\ConfigProvider::class],
             [\CoiSA\Monolog\Strategy\ConfigProvider::class],
-
-            [LoggerConfigProvider::class],
         ];
     }
 
-    public function provideConfigProviderConstants()
+    public function provideStrategies()
     {
         $reflection = new \ReflectionClass(StrategyInterface::class);
         $constants  = $reflection->getConstants();
@@ -57,23 +53,14 @@ final class ConfigProviderTest extends TestCase
     }
 
     /**
-     * @dataProvider provideConfigProviderConstants
+     * @dataProvider provideStrategies
      */
     public function testAssertSameStrategyGivenInConstructor(string $strategy): void
     {
-        $this->configProvider = new ConfigProvider($strategy);
-
-        $config = ($this->configProvider)();
+        $configProvider = new ConfigProvider($strategy);
+        $config         = ($configProvider)();
 
         $this->assertSame($strategy, $config[StrategyInterface::class]);
-    }
-
-    public function testMethodInvokeReturnArray()
-    {
-        $config = ($this->configProvider)();
-        $this->assertIsArray($config);
-
-        return $config;
     }
 
     /**
@@ -83,58 +70,25 @@ final class ConfigProviderTest extends TestCase
     {
         $object = new $namespace();
 
-        $provided = ($this->configProvider)();
-        $config   = ($object)();
+        $merged = ArrayUtils::merge(
+            $this->getConfig(),
+            ($object)(),
+            true
+        );
 
-        $merged = ArrayUtils::merge($provided, $config, true);
-
-        $this->assertSame($merged, ($this->configProvider)());
+        $this->assertSame($merged, $this->getConfig());
     }
 
-    /**
-     * @depends testMethodInvokeReturnArray
-     */
-    public function testMethodInvokeReturnArrayWithStrategy(array $config): void
+    public function testInvokeWillReturnArrayWithStrategy(): void
     {
+        $config = $this->getConfig();
+
         $this->assertArrayHasKey(StrategyInterface::class, $config);
         $this->assertIsString($config[StrategyInterface::class]);
     }
 
-    /**
-     * @depends testMethodInvokeReturnArray
-     */
-    public function testMethodInvokeReturnArrayWithDependencies(array $config)
+    protected function getConfigProvider(): callable
     {
-        $index = 'dependencies';
-
-        $this->assertArrayHasKey($index, $config);
-        $this->assertIsArray($config[$index]);
-
-        return $config[$index];
-    }
-
-    public function testConfigProviderHasGetDependenciesMethod(): void
-    {
-        $this->assertTrue(\method_exists($this->configProvider, 'getDependencies'));
-    }
-
-    /**
-     * @depends testConfigProviderHasGetDependenciesMethod
-     */
-    public function testConfigProviderGetDependenciesMethodReturnArray(): array
-    {
-        $dependencies = $this->configProvider->getDependencies();
-
-        $this->assertIsArray($dependencies);
-
-        return $dependencies;
-    }
-
-    /**
-     * @depends testConfigProviderGetDependenciesMethodReturnArray
-     */
-    public function textConfigProviderGetDependenciesMethodReturnSameAsInvoke(array $dependencies): void
-    {
-        $this->assertSame(($this->configProvider)()['dependencies'], $dependencies);
+        return new ConfigProvider();
     }
 }

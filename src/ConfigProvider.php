@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace CoiSA\Monolog;
 
-use CoiSA\Monolog\Container\ConfigProvider\LoggerConfigProvider;
 use Zend\ConfigAggregator\ArrayProvider;
 use Zend\ConfigAggregator\ConfigAggregator;
 
@@ -42,12 +41,11 @@ final class ConfigProvider
             ]),
             Git\ConfigProvider::class,
             Handler\ConfigProvider::class,
+            Log\ConfigProvider::class,
             Middleware\ConfigProvider::class,
             Processor\ConfigProvider::class,
             ServiceManager\ConfigProvider::class,
             Strategy\ConfigProvider::class,
-
-            LoggerConfigProvider::class,
         ]);
     }
 

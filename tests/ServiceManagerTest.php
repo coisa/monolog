@@ -22,18 +22,23 @@ use Zend\ServiceManager\ServiceManager;
  *
  * @package CoiSA\Monolog\Test
  */
-final class ServiceManagerTest extends ContainerTest
+final class ServiceManagerTest extends AbstractContainerTest
 {
     /**
      * @return ContainerInterface
      */
     public function getContainer(): ContainerInterface
     {
-        $configProvider = new ConfigProvider();
+        $config = $this->getConfig();
 
-        $container = new ServiceManager($configProvider->getDependencies());
-        $container->setService('config', $configProvider());
+        $container = new ServiceManager($config['dependencies']);
+        $container->setService('config', $config);
 
         return $container;
+    }
+
+    protected function getConfig(): array
+    {
+        return (new ConfigProvider())();
     }
 }

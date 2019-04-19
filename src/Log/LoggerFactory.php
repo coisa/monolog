@@ -11,7 +11,7 @@
 
 declare(strict_types=1);
 
-namespace CoiSA\Monolog\Container\Factory;
+namespace CoiSA\Monolog\Log;
 
 use CoiSA\Monolog\Processor\ConfigProvider;
 use CoiSA\Monolog\Strategy\StrategyInterface;
@@ -23,7 +23,7 @@ use Psr\Container\ContainerInterface;
  *
  * @package CoiSA\Monolog\Container\Factory
  */
-class LoggerFactory
+final class LoggerFactory
 {
     /**
      * @const string Default logger context name

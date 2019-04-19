@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace CoiSA\Monolog\Handler;
 
 use Monolog\Handler;
-use Monolog\Handler\GroupHandler;
 use Raven_Client;
 
 /**
@@ -40,9 +39,6 @@ class ConfigProvider
     public function getDependencies()
     {
         return [
-            'aliases' => [
-                GroupHandler::class => Handler\WhatFailureGroupHandler::class,
-            ],
             'invokables' => [
                 Raven_Client::class => Raven_Client::class,
             ],
@@ -51,6 +47,7 @@ class ConfigProvider
                 Handler\DeduplicationHandler::class    => DeduplicationHandlerFactory::class,
                 Handler\ErrorLogHandler::class         => ErrorLogHandlerFactory::class,
                 Handler\FingersCrossedHandler::class   => FingersCrossedHandlerFactory::class,
+                Handler\GroupHandler::class            => GroupHandlerFactory::class,
                 Handler\RedisHandler::class            => RedisHandlerFactory::class,
                 Handler\RavenHandler::class            => RavenHandlerFactory::class,
                 Handler\StreamHandler::class           => StreamHandlerFactory::class,

@@ -14,7 +14,8 @@ declare(strict_types=1);
 namespace CoiSA\Monolog\Test\Handler;
 
 use CoiSA\Monolog\Handler\WhatFailureGroupHandlerFactory;
-use Monolog\Handler\NullHandler;
+use Monolog\Handler\GroupHandler;
+use Monolog\Handler\HandlerInterface;
 use Monolog\Handler\WhatFailureGroupHandler;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Prophecy\ObjectProphecy;
@@ -41,26 +42,26 @@ final class WhatFailureGroupHandlerFactoryTest extends TestCase
     public function setUp(): void
     {
         $this->container = $this->prophesize(ContainerInterface::class);
-        $this->handler   = $this->prophesize(NullHandler::class);
+        $this->handler   = $this->prophesize(GroupHandler::class);
 
         $this->factory = new WhatFailureGroupHandlerFactory();
 
-        $this->container->get(NullHandler::class)->will([$this->handler, 'reveal']);
+        $this->container->get(GroupHandler::class)->will([$this->handler, 'reveal']);
     }
 
-    public function testFactoryRaiseExceptionWhenNullHandlerNotFound()
+    public function testFactoryRaiseExceptionWhenGroupHandlerNotFound(): void
     {
-        $this->container->get(NullHandler::class)->willThrow(ServiceNotFoundException::class);
+        $this->container->get(GroupHandler::class)->willThrow(ServiceNotFoundException::class);
 
         $this->expectException(ContainerExceptionInterface::class);
         ($this->factory)($this->container->reveal());
     }
 
-    public function testFactoryRaiseExceptionWhenConfigNotFound()
+    public function testFactoryWithGroupHandlerReturnWhatFailureGroupHandler(): void
     {
-        $this->container->get('config')->willThrow(ServiceNotFoundException::class);
+        $handler = ($this->factory)($this->container->reveal());
 
-        $this->expectException(ContainerExceptionInterface::class);
-        ($this->factory)($this->container->reveal());
+        $this->assertInstanceOf(HandlerInterface::class, $handler);
+        $this->assertInstanceOf(WhatFailureGroupHandler::class, $handler);
     }
 }

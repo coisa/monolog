@@ -11,34 +11,29 @@
 
 declare(strict_types=1);
 
-namespace CoiSA\Monolog\Container\ConfigProvider;
+namespace CoiSA\Monolog\Log;
 
-use CoiSA\Monolog\Container\Factory;
 use Monolog\Logger;
 use Psr\Log\LoggerInterface;
 
 /**
- * Class LoggerConfigProvider
+ * Class ConfigProvider
  *
- * @package CoiSA\Monolog\Container\ConfigProvider
+ * @package CoiSA\Monolog\Log
  */
-class LoggerConfigProvider
+class ConfigProvider
 {
     /**
-     * Return config mappings for the Logger
-     *
      * @return array
      */
     public function __invoke(): array
     {
         return [
-            'dependencies' => $this->getDependencies()
+            'dependencies' => $this->getDependencies(),
         ];
     }
 
     /**
-     * Return dependency mappings for the Logger
-     *
      * @return array
      */
     public function getDependencies()
@@ -50,7 +45,7 @@ class LoggerConfigProvider
                 LoggerInterface::class => Logger::class,
             ],
             'factories'    => [
-                Logger::class => Factory\LoggerFactory::class,
+                Logger::class => LoggerFactory::class,
             ],
         ];
     }
