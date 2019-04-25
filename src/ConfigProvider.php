@@ -44,7 +44,7 @@ final class ConfigProvider
             Log\ConfigProvider::class,
             Middleware\ConfigProvider::class,
             Processor\ConfigProvider::class,
-            ServiceManager\ConfigProvider::class,
+            Initializer\ConfigProvider::class,
             Strategy\ConfigProvider::class,
         ]);
     }

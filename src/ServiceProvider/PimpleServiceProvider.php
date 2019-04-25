@@ -11,17 +11,18 @@
 
 declare(strict_types=1);
 
-namespace CoiSA\Monolog\Container\ServiceProvider;
+namespace CoiSA\Monolog\ServiceProvider;
 
 use CoiSA\Monolog\ConfigProvider;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use Zend\Pimple\Config\Config;
+use Zend\Stdlib\ArrayUtils;
 
 /**
  * Class PimpleServiceProvider
  *
- * @package CoiSA\Monolog\Container\ServiceProvider
+ * @package CoiSA\Monolog\ServiceProvider
  */
 class PimpleServiceProvider implements ServiceProviderInterface
 {
@@ -32,17 +33,16 @@ class PimpleServiceProvider implements ServiceProviderInterface
      */
     public function register(Container $pimple): void
     {
-        if (isset($pimple['config'])) {
-            $originalConfig = $pimple['config'];
+        $config = (new ConfigProvider())();
+
+        if ($pimple->offsetExists('config')) {
+            $config = ArrayUtils::merge(
+                $config,
+                $pimple->offsetGet('config')
+            );
         }
 
-        $configProvider = new ConfigProvider();
-
-        $config = new Config($configProvider());
+        $config = new Config($config);
         $config->configureContainer($pimple);
-
-        if (isset($originalConfig)) {
-            $pimple['config'] = \array_merge_recursive($originalConfig, $pimple['config']);
-        }
     }
 }

@@ -11,19 +11,18 @@
 
 declare(strict_types=1);
 
-namespace CoiSA\Monolog\ServiceManager\Initializer;
+namespace CoiSA\Monolog\Initializer;
 
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
-use Zend\ServiceManager\Initializer\InitializerInterface;
 
 /**
  * Class LoggerAwareInitializer
  *
- * @package CoiSA\Monolog\ServiceManager\Initializer
+ * @package CoiSA\Monolog\Initializer
  */
-final class LoggerAwareInitializer implements InitializerInterface
+final class LoggerAwareInitializer
 {
     /**
      * @param ContainerInterface $container

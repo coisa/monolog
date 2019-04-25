@@ -33,6 +33,7 @@ final class AccessLogMiddlewareFactoryTest extends TestCase
     /** @var ContainerInterface|ObjectProphecy */
     private $container;
 
+    /** @var LoggerInterface|ObjectProphecy */
     private $logger;
 
     /** @var AccessLogMiddlewareFactory */

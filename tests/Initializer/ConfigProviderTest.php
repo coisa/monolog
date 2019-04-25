@@ -11,15 +11,15 @@
 
 declare(strict_types=1);
 
-namespace CoiSA\Monolog\Test\ServiceManager;
+namespace CoiSA\Monolog\Test\Initializer;
 
-use CoiSA\Monolog\ServiceManager\ConfigProvider;
+use CoiSA\Monolog\Initializer\ConfigProvider;
 use CoiSA\Monolog\Test\AbstractConfigProviderTest;
 
 /**
  * Class ConfigProviderTest
  *
- * @package CoiSA\Monolog\Test\ServiceManager
+ * @package CoiSA\Monolog\Test\Initializer
  */
 final class ConfigProviderTest extends AbstractConfigProviderTest
 {

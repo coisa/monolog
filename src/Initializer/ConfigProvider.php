@@ -11,12 +11,12 @@
 
 declare(strict_types=1);
 
-namespace CoiSA\Monolog\ServiceManager;
+namespace CoiSA\Monolog\Initializer;
 
 /**
  * Class ConfigProvider
  *
- * @package CoiSA\Monolog\ServiceManager
+ * @package CoiSA\Monolog\Initializer
  */
 class ConfigProvider
 {
@@ -37,7 +37,7 @@ class ConfigProvider
     {
         return [
             'initializers' => [
-                Initializer\LoggerAwareInitializer::class
+                LoggerAwareInitializer::class
             ],
         ];
     }

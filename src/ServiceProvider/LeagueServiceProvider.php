@@ -11,7 +11,7 @@
 
 declare(strict_types=1);
 
-namespace CoiSA\Monolog\Container\ServiceProvider;
+namespace CoiSA\Monolog\ServiceProvider;
 
 use CoiSA\Monolog\ConfigProvider;
 use League\Container\ServiceProvider\AbstractServiceProvider;
@@ -20,7 +20,7 @@ use Pimple\Container;
 /**
  * Class LeagueServiceProvider
  *
- * @package CoiSA\Monolog\Container\ServiceProvider
+ * @package CoiSA\Monolog\ServiceProvider
  *
  * @method \League\Container\Container getContainer
  */

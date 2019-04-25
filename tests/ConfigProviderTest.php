@@ -39,7 +39,7 @@ final class ConfigProviderTest extends AbstractConfigProviderTest
             [\CoiSA\Monolog\Handler\ConfigProvider::class],
             [\CoiSA\Monolog\Middleware\ConfigProvider::class],
             [\CoiSA\Monolog\Processor\ConfigProvider::class],
-            [\CoiSA\Monolog\ServiceManager\ConfigProvider::class],
+            [\CoiSA\Monolog\Initializer\ConfigProvider::class],
             [\CoiSA\Monolog\Strategy\ConfigProvider::class],
         ];
     }

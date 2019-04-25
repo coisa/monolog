@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace CoiSA\Monolog\Test;
 
 use CoiSA\Monolog\ConfigProvider;
-use CoiSA\Monolog\Container\ServiceProvider\LeagueServiceProvider;
+use CoiSA\Monolog\ServiceProvider\LeagueServiceProvider;
 use League\Container\Container;
 use Psr\Container\ContainerInterface;
 

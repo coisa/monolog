@@ -68,7 +68,7 @@ final class LoggerFactory
      */
     private function setHandler(Logger $logger, ContainerInterface $container): void
     {
-        if (!$container->has(ProcessorInterface::class)) {
+        if (!$container->has(HandlerInterface::class)) {
             return;
         }
 
@@ -83,7 +83,7 @@ final class LoggerFactory
      */
     private function setProcessor(Logger $logger, ContainerInterface $container): void
     {
-        if (!$container->has(HandlerInterface::class)) {
+        if (!$container->has(ProcessorInterface::class)) {
             return;
         }
 

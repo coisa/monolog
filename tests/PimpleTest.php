@@ -14,7 +14,8 @@ declare(strict_types=1);
 namespace CoiSA\Monolog\Test;
 
 use CoiSA\Monolog\ConfigProvider;
-use CoiSA\Monolog\Container\ServiceProvider\PimpleServiceProvider;
+use CoiSA\Monolog\ServiceProvider\PimpleServiceProvider;
+use CoiSA\Monolog\Strategy\StrategyInterface;
 use Pimple\Container;
 use Psr\Container\ContainerInterface;
 
@@ -26,14 +27,40 @@ use Psr\Container\ContainerInterface;
 final class PimpleTest extends AbstractContainerTest
 {
     /**
+     * @var Container
+     */
+    private $pimple;
+
+    /**
+     * @var array
+     */
+    private $config;
+
+    public function setUp(): void
+    {
+        $this->config = [
+            StrategyInterface::class => null,
+        ];
+
+        $this->pimple = new Container();
+
+        $this->pimple->offsetSet('config', $this->config);
+        $this->pimple->register(new PimpleServiceProvider());
+    }
+
+    /**
      * @return ContainerInterface
      */
     public function getContainer(): ContainerInterface
     {
-        $pimple = new Container();
-        $pimple->register(new PimpleServiceProvider());
+        return new \Pimple\Psr11\Container($this->pimple);
+    }
 
-        return new \Pimple\Psr11\Container($pimple);
+    public function testRegisterWillMergeConfigs(): void
+    {
+        $config = $this->pimple->offsetGet('config');
+
+        $this->assertEquals($this->config, \array_intersect_assoc($this->config, $config));
     }
 
     protected function getConfig(): array
