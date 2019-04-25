@@ -24,6 +24,11 @@ use Psr\Container\ContainerInterface;
 final class RedisHandlerFactory
 {
     /**
+     * @var string
+     */
+    const DEFAULT_KEY = 'monolog';
+
+    /**
      * @param ContainerInterface $container
      *
      * @throws \InvalidArgumentException
@@ -46,7 +51,7 @@ final class RedisHandlerFactory
      *
      * @return string
      */
-    private function getKey(ContainerInterface $container, string $default = 'monolog'): string
+    private function getKey(ContainerInterface $container, string $default = self::DEFAULT_KEY): string
     {
         if (!$container->has('config')) {
             return $default;

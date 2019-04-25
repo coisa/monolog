@@ -72,9 +72,7 @@ final class SyslogHandlerFactoryTest extends TestCase
     {
         $this->container->has('config')->willReturn(true);
         $this->container->get('config')->willReturn([
-            SyslogHandlerFactory::class => [
-                \uniqid('test', true)
-            ]
+            SyslogHandlerFactory::class => new \stdClass()
         ]);
 
         $handler = ($this->factory)($this->container->reveal());
