@@ -11,7 +11,7 @@
 
 declare(strict_types=1);
 
-use CoiSA\Monolog\Container\ServiceProvider\LeagueServiceProvider;
+use CoiSA\Monolog\ServiceProvider\LeagueServiceProvider;
 use League\Container\Container;
 
 require_once \dirname(__DIR__) . '/vendor/autoload.php';

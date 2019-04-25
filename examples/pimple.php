@@ -11,7 +11,7 @@
 
 declare(strict_types=1);
 
-use CoiSA\Monolog\Container\ServiceProvider\PimpleServiceProvider;
+use CoiSA\Monolog\ServiceProvider\PimpleServiceProvider;
 use Pimple\Container;
 
 require_once \dirname(__DIR__) . '/vendor/autoload.php';
