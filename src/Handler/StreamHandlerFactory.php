@@ -24,6 +24,11 @@ use Psr\Container\ContainerInterface;
 final class StreamHandlerFactory
 {
     /**
+     * @var string
+     */
+    const DEFAULT_PATH = 'php://stdout';
+
+    /**
      * @param ContainerInterface $container
      *
      * @throws \Exception
@@ -43,7 +48,7 @@ final class StreamHandlerFactory
      *
      * @return resource|string
      */
-    private function getStream(ContainerInterface $container, string $default = 'php://stdout')
+    private function getStream(ContainerInterface $container, string $default = self::DEFAULT_PATH)
     {
         if (!$container->has('config')) {
             return $default;

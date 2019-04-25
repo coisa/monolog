@@ -39,14 +39,14 @@ final class StreamHandlerFactoryTest extends TestCase
         $this->factory = new StreamHandlerFactory();
     }
 
-    public function testFactoryWihoutConfigReturnStreamHandlerToPhpStdOut(): void
+    public function testFactoryWihoutConfigReturnStreamHandlerDefaultPath(): void
     {
         $this->container->has('config')->willReturn(false);
 
         $handler = ($this->factory)($this->container->reveal());
 
         $this->assertInstanceOf(StreamHandler::class, $handler);
-        $this->assertEquals('php://stdout', $handler->getUrl());
+        $this->assertEquals(StreamHandlerFactory::DEFAULT_PATH, $handler->getUrl());
     }
 
     public function testFactoryWithEmptyConfigReturnRepositoryWithCurrentWorkingDir(): void
@@ -57,7 +57,7 @@ final class StreamHandlerFactoryTest extends TestCase
         $handler = ($this->factory)($this->container->reveal());
 
         $this->assertInstanceOf(StreamHandler::class, $handler);
-        $this->assertEquals('php://stdout', $handler->getUrl());
+        $this->assertEquals(StreamHandlerFactory::DEFAULT_PATH, $handler->getUrl());
     }
 
     public function testFactoryWithInvalidConfigReturnRepositoryWithCurrentWorkingDir(): void
@@ -70,7 +70,7 @@ final class StreamHandlerFactoryTest extends TestCase
         $handler = ($this->factory)($this->container->reveal());
 
         $this->assertInstanceOf(StreamHandler::class, $handler);
-        $this->assertEquals('php://stdout', $handler->getUrl());
+        $this->assertEquals(StreamHandlerFactory::DEFAULT_PATH, $handler->getUrl());
     }
 
     public function testFactoryWithConfigReturnRepositoryWithGivenPath(): void

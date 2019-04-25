@@ -24,6 +24,11 @@ use Psr\Container\ContainerInterface;
 final class SyslogHandlerFactory
 {
     /**
+     * @var string
+     */
+    const DEFAULT_ID = 'monolog';
+
+    /**
      * Syslog handler service factory
      *
      * @param ContainerInterface $container
@@ -43,7 +48,7 @@ final class SyslogHandlerFactory
      *
      * @return string
      */
-    private function getIdentity(ContainerInterface $container, string $default = 'monolog'): string
+    private function getIdentity(ContainerInterface $container, string $default = self::DEFAULT_ID): string
     {
         if (!$container->has('config')) {
             return $default;
