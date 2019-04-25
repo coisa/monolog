@@ -65,10 +65,8 @@ final class RedisHandlerFactoryTest extends TestCase
         ($this->factory)($this->container->reveal());
     }
 
-    public function testFactoryWihoutConfigReturnRedisHandler(): void
+    public function testFactoryWithoutConfigReturnRedisHandlerWithDefaultKey(): void
     {
-        $this->markTestIncomplete();
-
         $this->container->has('config')->willReturn(false);
 
         $handler = ($this->factory)($this->container->reveal());
@@ -78,8 +76,6 @@ final class RedisHandlerFactoryTest extends TestCase
 
     public function testFactoryWithEmptyConfigReturnRedisHandler(): void
     {
-        $this->markTestIncomplete();
-
         $this->container->has('config')->willReturn(true);
         $this->container->get('config')->willReturn([]);
 
@@ -90,8 +86,6 @@ final class RedisHandlerFactoryTest extends TestCase
 
     public function testFactoryWithInvalidConfigReturnRedisHandler(): void
     {
-        $this->markTestIncomplete();
-
         $this->container->has('config')->willReturn(true);
         $this->container->get('config')->willReturn([
             RedisHandlerFactory::class => new \stdClass()

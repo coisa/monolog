@@ -4,6 +4,10 @@ build:
             project_setup:
                 override: true
             tests:
+                environment:
+                    php:
+                        pecl_extensions:
+                            - redis
                 override:
                     - php-scrutinizer-run --enable-security-analysis
                     - phpcs-run --standard=phpcs.xml
