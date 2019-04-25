@@ -56,7 +56,7 @@ final class SyslogHandlerFactoryTest extends TestCase
     {
         $this->container->has('config')->willReturn(true);
         $this->container->get('config')->willReturn([
-            uniqid('test', true) => uniqid('test', true)
+            \uniqid('test', true) => \uniqid('test', true)
         ]);
 
         $handler = ($this->factory)($this->container->reveal());
@@ -73,7 +73,7 @@ final class SyslogHandlerFactoryTest extends TestCase
         $this->container->has('config')->willReturn(true);
         $this->container->get('config')->willReturn([
             SyslogHandlerFactory::class => [
-                uniqid('test', true)
+                \uniqid('test', true)
             ]
         ]);
 
@@ -88,7 +88,7 @@ final class SyslogHandlerFactoryTest extends TestCase
 
     public function testFactoryWithStringConfigReturnSyslogHandlerWithConfiguredIdentity(): void
     {
-        $uniq = uniqid('test', true);
+        $uniq = \uniqid('test', true);
 
         $this->container->has('config')->willReturn(true);
         $this->container->get('config')->willReturn([
