@@ -37,7 +37,7 @@ final class GroupHandlerFactory
      */
     public function __invoke(ContainerInterface $container): GroupHandler
     {
-        $handlers = $this->getHandlers($container);
+        $handlers = $this->getContainerHandlers($container);
 
         return new GroupHandler($handlers);
     }
@@ -51,34 +51,24 @@ final class GroupHandlerFactory
      *
      * @return array
      */
-    private function getHandlers(ContainerInterface $container): array
+    private function getContainerHandlers(ContainerInterface $container): array
     {
-        $handlers = [
-            $container->get(NullHandler::class),
-        ];
+        $handlers = [];
 
         $config       = $container->get('config');
-        $dependencies = $this->getCandidates($config);
+        $dependencies = $this->getConfigDependencyHandlerClassNames($config);
 
         foreach ($dependencies as $handler) {
-            if (!\is_string($handler)) {
+            $handler = $this->getContainerHandler($container, $handler);
+
+            if (!$handler instanceof HandlerInterface) {
                 continue;
             }
 
-            if (!$this->isHandler($handler)) {
-                continue;
-            }
-
-            $handlers[] = $this->getHandler($container, $handler);
+            $handlers[] = $handler;
         }
 
-        return \array_filter(
-            $handlers,
-            function ($handler) {
-                return !($handler instanceof NullHandler);
-            },
-            ARRAY_FILTER_USE_BOTH
-        );
+        return \array_filter($handlers);
     }
 
     /**
@@ -89,36 +79,13 @@ final class GroupHandlerFactory
      *
      * @return HandlerInterface
      */
-    private function getHandler(ContainerInterface $container, string $className): HandlerInterface
+    private function getContainerHandler(ContainerInterface $container, string $className): ?HandlerInterface
     {
         try {
-            $handler = $container->get($className);
+            return $container->get($className);
         } catch (\Throwable $exception) {
-            return $container->get(NullHandler::class);
+            return null;
         }
-
-        return $handler;
-    }
-
-    /**
-     * Check if a given class name belongs to a handler
-     *
-     * @param string $className Class name to verify if is a handler
-     *
-     * @return bool
-     */
-    private function isHandler(string $className): bool
-    {
-        $implements = @\class_implements($className);
-        if (false === $implements) {
-            return false;
-        }
-
-        if (false === \in_array(HandlerInterface::class, $implements)) {
-            return false;
-        }
-
-        return true;
     }
 
     /**
@@ -128,20 +95,33 @@ final class GroupHandlerFactory
      *
      * @return array
      */
-    private function getCandidates($config): array
+    private function getConfigDependencyHandlerClassNames($config): array
     {
-        $dependencies = \array_keys(\array_merge(
-            $config['dependencies']['invokables'],
-            $config['dependencies']['factories']
-        ));
+        $dependencies = \array_keys(\array_merge(...\array_values($config['dependencies'])));
+        $dependencies = \array_filter($dependencies, function ($handler) {
+            $implements = @\class_implements($handler);
 
-        $reflection     = new \ReflectionClass(StrategyInterface::class);
-        $ignoreHandlers = $reflection->getConstants();
+            return \is_array($implements) && \in_array(HandlerInterface::class, $implements);
+        });
 
-        $ignoreHandlers[] = GroupHandler::class;
-
+        $ignoreHandlers = $this->getStrategyHandlerClassNames();
         $dependencies = \array_diff($dependencies, $ignoreHandlers);
 
         return $dependencies;
+    }
+
+    /**
+     * @throws \ReflectionException
+     *
+     * @return array
+     */
+    private function getStrategyHandlerClassNames(): array
+    {
+        $reflection = new \ReflectionClass(StrategyInterface::class);
+
+        $ignoreHandlers   = $reflection->getConstants();
+        $ignoreHandlers[] = GroupHandler::class;
+
+        return $ignoreHandlers;
     }
 }
