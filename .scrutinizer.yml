@@ -1,0 +1,29 @@
+build:
+    nodes:
+        analysis:
+            environment:
+                php:
+                    pecl_extensions:
+                        - redis
+            project_setup:
+                override: true
+            tests:
+                override:
+                    - php-scrutinizer-run --enable-security-analysis
+                    - phpcs-run --standard=phpcs.xml
+                    - vendor/bin/security-checker security:check
+
+        coverage:
+            tests:
+                override:
+                    - command: vendor/bin/phpunit
+                      coverage:
+                        file: docs/coverage.xml
+                        format: clover
+
+checks:
+    php: true
+
+filter:
+    excluded_paths:
+        - tests/*

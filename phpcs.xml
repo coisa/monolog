@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<ruleset name="Zend Framework coding standard">
+    <rule ref="./vendor/squizlabs/php_codesniffer/src/Standards/PSR12/ruleset.xml"/>
+
+    <arg name="report" value="summary"/>
+
+    <file>examples</file>
+    <file>src</file>
+    <file>tests</file>
+</ruleset>

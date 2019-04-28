@@ -1,12 +1,15 @@
-<?php declare(strict_types=1);
-/*
+<?php
+
+/**
  * This file is part of coisa/monolog.
  *
  * (c) Felipe Sayão Lobato Abreu <github@felipeabreu.com.br>
  *
- * This source file is subject to the Apache v2.0 license that is bundled
+ * This source file is subject to the license that is bundled
  * with this source code in the file LICENSE.
  */
+
+declare(strict_types=1);
 
 namespace CoiSA\Monolog\Test;
 
@@ -19,15 +22,23 @@ use Zend\ServiceManager\ServiceManager;
  *
  * @package CoiSA\Monolog\Test
  */
-class ServiceManagerTest extends ContainerTest
+final class ServiceManagerTest extends AbstractContainerTest
 {
     /**
      * @return ContainerInterface
      */
     public function getContainer(): ContainerInterface
     {
-        $configProvider = new ConfigProvider();
+        $config = $this->getConfig();
 
-        return new ServiceManager($configProvider->getDependencies());
+        $container = new ServiceManager($config['dependencies']);
+        $container->setService('config', $config);
+
+        return $container;
+    }
+
+    protected function getConfig(): array
+    {
+        return (new ConfigProvider())();
     }
 }
