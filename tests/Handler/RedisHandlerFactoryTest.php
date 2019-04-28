@@ -46,7 +46,7 @@ final class RedisHandlerFactoryTest extends TestCase
         $this->container = $this->prophesize(ContainerInterface::class);
         $this->redis     = $this->prophesize(\Redis::class);
 
-        if (!class_exists(\Redis::class)) {
+        if (!\class_exists(\Redis::class)) {
             $this->redis->willExtend(Client::class);
         }
 
@@ -54,7 +54,7 @@ final class RedisHandlerFactoryTest extends TestCase
 
         $this->container->get(\Redis::class)->will([$this->redis, 'reveal']);
 
-        $reflection = new \ReflectionClass(RedisHandler::class);
+        $reflection     = new \ReflectionClass(RedisHandler::class);
         $this->redisKey = $reflection->getProperty('redisKey');
         $this->redisKey->setAccessible(true);
     }
