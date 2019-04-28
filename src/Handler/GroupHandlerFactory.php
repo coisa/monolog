@@ -68,7 +68,9 @@ final class GroupHandlerFactory
             $handlers[] = $handler;
         }
 
-        return \array_filter($handlers);
+        return \array_filter($handlers, function ($handler) {
+            return !$handler instanceof NullHandler;
+        });
     }
 
     /**
@@ -84,7 +86,7 @@ final class GroupHandlerFactory
         try {
             return $container->get($className);
         } catch (\Throwable $exception) {
-            return null;
+            return $container->get(NullHandler::class);
         }
     }
 
