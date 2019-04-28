@@ -16,6 +16,7 @@ namespace CoiSA\Monolog\Test\Handler;
 use CoiSA\Monolog\Handler\RedisHandlerFactory;
 use Monolog\Handler\RedisHandler;
 use PHPUnit\Framework\TestCase;
+use Predis\Client;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -34,6 +35,9 @@ final class RedisHandlerFactoryTest extends TestCase
     /** @var ObjectProphecy|\Redis */
     private $redis;
 
+    /** @var \ReflectionProperty */
+    private $redisKey;
+
     /** @var RedisHandlerFactory */
     private $factory;
 
@@ -42,9 +46,17 @@ final class RedisHandlerFactoryTest extends TestCase
         $this->container = $this->prophesize(ContainerInterface::class);
         $this->redis     = $this->prophesize(\Redis::class);
 
+        if (!class_exists(\Redis::class)) {
+            $this->redis->willExtend(Client::class);
+        }
+
         $this->factory = new RedisHandlerFactory();
 
         $this->container->get(\Redis::class)->will([$this->redis, 'reveal']);
+
+        $reflection = new \ReflectionClass(RedisHandler::class);
+        $this->redisKey = $reflection->getProperty('redisKey');
+        $this->redisKey->setAccessible(true);
     }
 
     public function testFactoryRaiseExceptionWhenRedisNotFound(): void
@@ -72,9 +84,10 @@ final class RedisHandlerFactoryTest extends TestCase
         $handler = ($this->factory)($this->container->reveal());
 
         $this->assertInstanceOf(RedisHandler::class, $handler);
+        $this->assertEquals(RedisHandlerFactory::DEFAULT_KEY, $this->redisKey->getValue($handler));
     }
 
-    public function testFactoryWithEmptyConfigReturnRedisHandler(): void
+    public function testFactoryWithEmptyConfigReturnRedisHandlerWithDefaultKey(): void
     {
         $this->container->has('config')->willReturn(true);
         $this->container->get('config')->willReturn([]);
@@ -82,9 +95,10 @@ final class RedisHandlerFactoryTest extends TestCase
         $handler = ($this->factory)($this->container->reveal());
 
         $this->assertInstanceOf(RedisHandler::class, $handler);
+        $this->assertEquals(RedisHandlerFactory::DEFAULT_KEY, $this->redisKey->getValue($handler));
     }
 
-    public function testFactoryWithInvalidConfigReturnRedisHandler(): void
+    public function testFactoryWithInvalidConfigReturnRedisHandlerWithDefaultKey(): void
     {
         $this->container->has('config')->willReturn(true);
         $this->container->get('config')->willReturn([
@@ -94,12 +108,11 @@ final class RedisHandlerFactoryTest extends TestCase
         $handler = ($this->factory)($this->container->reveal());
 
         $this->assertInstanceOf(RedisHandler::class, $handler);
+        $this->assertEquals(RedisHandlerFactory::DEFAULT_KEY, $this->redisKey->getValue($handler));
     }
 
     public function testFactoryWithConfigReturnRedisHandlerWithGivenKey(): void
     {
-        $this->markTestIncomplete();
-
         $key = \uniqid('test', true);
 
         $this->container->has('config')->willReturn(true);
@@ -110,5 +123,6 @@ final class RedisHandlerFactoryTest extends TestCase
         $handler = ($this->factory)($this->container->reveal());
 
         $this->assertInstanceOf(RedisHandler::class, $handler);
+        $this->assertEquals($key, $this->redisKey->getValue($handler));
     }
 }

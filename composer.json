@@ -47,6 +47,7 @@
         "friendsofphp/php-cs-fixer": "^2.14",
         "league/container": "^3.2",
         "phpunit/phpunit": "^7.3",
+        "predis/predis": "^1.1",
         "rollbar/rollbar": "^1.5",
         "sensiolabs/security-checker": "^5.0",
         "sentry/sentry": "^1.9",
@@ -75,10 +76,12 @@
         }
     },
     "suggest": {
+        "ext-redis": "Allow sending log messages to a Redis server",
         "zendframework/zend-pimple-config": "If you intend to use with any of follow: Pimple\\Container or League\\Container"
     },
     "scripts": {
         "cs-check": "php-cs-fixer fix --dry-run --diff",
-        "cs-fix": "php-cs-fixer fix"
+        "cs-fix": "php-cs-fixer fix",
+        "test": "phpunit"
     }
 }
