@@ -25,9 +25,9 @@
         }
     ],
     "support": {
-        "issues": "https://github.com/coisa/monolog/issues",
-        "source": "https://github.com/coisa/monolog",
-        "rss": "https://github.com/coisa/monolog/releases.atom"
+        "issues": "https://github.com/artificenerd/monolog/issues",
+        "source": "https://github.com/artificenerd/monolog",
+        "rss": "https://github.com/artificenerd/monolog/releases.atom"
     },
     "require": {
         "php": "^7.1",
