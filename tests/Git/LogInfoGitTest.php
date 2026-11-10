@@ -57,9 +57,9 @@ final class LogInfoGitTest extends TestCase
 
         $this->repository->isBare()->willReturn(false);
         $this->repository->getReferences()->will([$this->referenceBag, 'reveal']);
+        $this->repository->getHead()->will([$this->branch, 'reveal']);
         $this->repository->getHeadCommit()->will([$this->commit, 'reveal']);
 
-        $this->referenceBag->getBranches()->willReturn([$this->branch->reveal()]);
         $this->referenceBag->getTags()->willReturn([$this->tag->reveal()]);
 
         $this->branch->getName()->willReturn(\uniqid('branch', true));
@@ -73,15 +73,33 @@ final class LogInfoGitTest extends TestCase
     {
         $this->expectException(\RuntimeException::class);
         $this->repository->isBare()->willReturn(true);
+        $this->repository->getGitDir()->willReturn('/archive');
 
         new LogInfoGit($this->repository->reveal());
     }
 
-    public function testGetCurrentBranchReturnRepositoryReferenceFirstBranchName(): void
+    /**
+     * HEAD determines the branch even when it is not the first branch listed.
+     */
+    public function testGetCurrentBranchReturnsHeadBranch(): void
     {
+        $otherBranch = $this->prophesize(Branch::class);
+        $otherBranch->getName()->willReturn('first-listed');
         $branch = $this->branch->reveal();
+        $this->referenceBag->getBranches()->willReturn([$otherBranch->reveal(), $branch]);
 
         $this->assertSame($branch->getName(), $this->logInfoGit->getCurrentBranch());
+    }
+
+    /**
+     * Detached HEAD has a commit but no checked-out branch.
+     */
+    public function testGetCurrentBranchReturnsNullForDetachedHead(): void
+    {
+        $this->repository->getHead()->will([$this->commit, 'reveal']);
+
+        $this->assertNull($this->logInfoGit->getCurrentBranch());
+        $this->assertSame($this->commit->reveal()->getHash(), $this->logInfoGit->getCommit());
     }
 
     public function testGetCommitReturnRepositoryCommitHash(): void

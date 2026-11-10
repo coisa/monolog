@@ -14,14 +14,11 @@ declare(strict_types=1);
 namespace CoiSA\Monolog\Test\Handler;
 
 use CoiSA\Monolog\Handler\WhatFailureGroupHandlerFactory;
-use Monolog\Handler\GroupHandler;
-use Monolog\Handler\HandlerInterface;
-use Monolog\Handler\WhatFailureGroupHandler;
+use Monolog\Handler\StreamHandler;
+use Monolog\Handler\TestHandler;
+use Monolog\Logger;
 use PHPUnit\Framework\TestCase;
-use Prophecy\Prophecy\ObjectProphecy;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\ContainerInterface;
-use Zend\ServiceManager\Exception\ServiceNotFoundException;
+use Zend\ServiceManager\ServiceManager;
 
 /**
  * Class WhatFailureGroupHandlerFactoryTest
@@ -30,38 +27,35 @@ use Zend\ServiceManager\Exception\ServiceNotFoundException;
  */
 final class WhatFailureGroupHandlerFactoryTest extends TestCase
 {
-    /** @var ContainerInterface|ObjectProphecy */
-    private $container;
-
-    /** @var ObjectProphecy|WhatFailureGroupHandler */
-    private $handler;
-
-    /** @var WhatFailureGroupHandlerFactory */
-    private $factory;
-
-    public function setUp(): void
+    /**
+     * The healthy destination receives both individual and buffered records.
+     */
+    public function testFailedDestinationDoesNotPreventLaterHandlers(): void
     {
-        $this->container = $this->prophesize(ContainerInterface::class);
-        $this->handler   = $this->prophesize(GroupHandler::class);
+        $failed = $this->createMock(StreamHandler::class);
+        $failed->expects($this->once())->method('handle')->willThrowException(new \RuntimeException('unavailable'));
+        $failed->expects($this->once())->method('handleBatch')
+            ->willThrowException(new \RuntimeException('unavailable'));
+        $healthy = new TestHandler();
 
-        $this->factory = new WhatFailureGroupHandlerFactory();
+        $dependencies = ['services' => [StreamHandler::class => $failed, TestHandler::class => $healthy]];
+        $container = new ServiceManager($dependencies);
+        $container->setService('config', ['dependencies' => $dependencies]);
+        $handler = (new WhatFailureGroupHandlerFactory())($container);
 
-        $this->container->get(GroupHandler::class)->will([$this->handler, 'reveal']);
-    }
+        $record = [
+            'message'    => 'single',
+            'context'    => [],
+            'level'      => Logger::INFO,
+            'level_name' => 'INFO',
+            'channel'    => 'test',
+            'datetime'   => new \DateTimeImmutable(),
+            'extra'      => [],
+        ];
+        $handler->handle($record);
+        $record['message'] = 'batch';
+        $handler->handleBatch([$record]);
 
-    public function testFactoryRaiseExceptionWhenGroupHandlerNotFound(): void
-    {
-        $this->container->get(GroupHandler::class)->willThrow(ServiceNotFoundException::class);
-
-        $this->expectException(ContainerExceptionInterface::class);
-        ($this->factory)($this->container->reveal());
-    }
-
-    public function testFactoryWithGroupHandlerReturnWhatFailureGroupHandler(): void
-    {
-        $handler = ($this->factory)($this->container->reveal());
-
-        $this->assertInstanceOf(HandlerInterface::class, $handler);
-        $this->assertInstanceOf(WhatFailureGroupHandler::class, $handler);
+        $this->assertSame(['single', 'batch'], \array_column($healthy->getRecords(), 'message'));
     }
 }

@@ -32,7 +32,7 @@ final class RedisHandlerFactoryTest extends TestCase
     /** @var ContainerInterface|ObjectProphecy */
     private $container;
 
-    /** @var ObjectProphecy|\Redis */
+    /** @var ObjectProphecy|\Redis|Client */
     private $redis;
 
     /** @var \ReflectionProperty */
@@ -44,11 +44,7 @@ final class RedisHandlerFactoryTest extends TestCase
     public function setUp(): void
     {
         $this->container = $this->prophesize(ContainerInterface::class);
-        $this->redis     = $this->prophesize(\Redis::class);
-
-        if (!\class_exists(\Redis::class)) {
-            $this->redis->willExtend(Client::class);
-        }
+        $this->redis     = $this->prophesize(\class_exists(\Redis::class) ? \Redis::class : Client::class);
 
         $this->factory = new RedisHandlerFactory();
 

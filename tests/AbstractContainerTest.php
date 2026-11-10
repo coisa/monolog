@@ -13,6 +13,9 @@ declare(strict_types=1);
 
 namespace CoiSA\Monolog\Test;
 
+use CoiSA\Monolog\Strategy\StrategyInterface;
+use Monolog\Handler\HandlerInterface;
+use Monolog\Handler\RedisHandler;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 
@@ -36,13 +39,13 @@ abstract class AbstractContainerTest extends TestCase
      */
     public function testContainerCanCreateServiceThatImplements(string $serviceName, string $instanceOf): void
     {
-        try {
-            $object = $this->getContainer()->get($serviceName);
-            $this->assertInstanceOf($instanceOf, $object);
-        } catch (\Throwable $throwable) {
-            // Mark as risky tests that can create the object but fails the InstanceOf assertion
-            $this->markAsRisky();
+        $container = $this->getContainer();
+        if ($serviceName === RedisHandler::class && !$container->has(\Redis::class)) {
+            $this->markTestSkipped('The optional Redis client service is not configured.');
         }
+
+        $object = $container->get($serviceName);
+        $this->assertInstanceOf($instanceOf, $object);
     }
 
     public function provideContainerServiceNameAndExpectedInstance()
@@ -55,6 +58,9 @@ abstract class AbstractContainerTest extends TestCase
 
         return \array_map(function ($serviceName) use ($dependencies) {
             $instanceOf = $dependencies['aliases'][$serviceName] ?? $serviceName;
+            if ($instanceOf === StrategyInterface::class) {
+                $instanceOf = HandlerInterface::class;
+            }
 
             return [
                 $serviceName,

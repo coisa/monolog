@@ -49,9 +49,9 @@ final class GroupHandlerFactory
      *
      * @throws \ReflectionException
      *
-     * @return array
+     * @return HandlerInterface[]
      */
-    private function getContainerHandlers(ContainerInterface $container): array
+    public function getContainerHandlers(ContainerInterface $container): array
     {
         $handlers = [];
 

@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace CoiSA\Monolog\Handler;
 
-use Monolog\Handler\GroupHandler;
 use Monolog\Handler\WhatFailureGroupHandler;
 use Psr\Container\ContainerInterface;
 
@@ -31,8 +30,6 @@ final class WhatFailureGroupHandlerFactory
      */
     public function __invoke(ContainerInterface $container): WhatFailureGroupHandler
     {
-        return new WhatFailureGroupHandler([
-            $container->get(GroupHandler::class)
-        ]);
+        return new WhatFailureGroupHandler((new GroupHandlerFactory())->getContainerHandlers($container));
     }
 }

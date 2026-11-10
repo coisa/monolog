@@ -37,7 +37,7 @@ class LogInfoGit
     public function __construct(Repository $repository)
     {
         if ($repository->isBare()) {
-            throw new \RuntimeException(\sprintf(
+            throw new GitMetadataUnavailable(\sprintf(
                 'Directory "%s" does not exist or is not a directory',
                 $repository->getGitDir()
             ));
@@ -51,11 +51,9 @@ class LogInfoGit
      */
     public function getCurrentBranch(): ?string
     {
-        /** @var Branch[] $branches */
-        $branches      = $this->repository->getReferences()->getBranches();
-        $currentBranch = \current($branches);
+        $head = $this->repository->getHead();
 
-        return $currentBranch->getName();
+        return $head instanceof Branch ? $head->getName() : null;
     }
 
     /**

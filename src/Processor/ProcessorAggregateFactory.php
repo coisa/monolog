@@ -10,11 +10,15 @@
  */
 
 declare(strict_types=1);
+
 /**
  * @package CoiSA\Monolog\Processor
  */
 namespace CoiSA\Monolog\Processor;
 
+use CoiSA\Monolog\Git\GitMetadataUnavailable;
+use Monolog\Processor\ProcessorInterface;
+use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 
 /**
@@ -31,9 +35,39 @@ final class ProcessorAggregateFactory
      */
     public function __invoke(ContainerInterface $container): ProcessorAggregate
     {
-        // @FIXME merge all processors defined in the container
-        return new ProcessorAggregate(
-            $container->get(GitProcessor::class)
-        );
+        $config     = $container->has('config') ? $container->get('config') : [];
+        $services   = $config[ConfigProvider::class] ?? [GitProcessor::class];
+        $services   = \array_diff($services, [ProcessorInterface::class, ProcessorAggregate::class]);
+        $processors = [];
+
+        foreach ($services as $service) {
+            try {
+                $processors[] = $container->get($service);
+            } catch (GitMetadataUnavailable | ContainerExceptionInterface $exception) {
+                if ($service !== GitProcessor::class || !$this->isGitMetadataUnavailable($exception)) {
+                    throw $exception;
+                }
+            }
+        }
+
+        return new ProcessorAggregate(...$processors);
+    }
+
+    /**
+     * Check for the optional Git service's cause through container wrappers.
+     *
+     * @param \Throwable $exception
+     *
+     * @return bool
+     */
+    private function isGitMetadataUnavailable(\Throwable $exception): bool
+    {
+        for ($cause = $exception; $cause !== null; $cause = $cause->getPrevious()) {
+            if ($cause instanceof GitMetadataUnavailable) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
