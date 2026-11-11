@@ -122,4 +122,15 @@ final class LogInfoGitTest extends TestCase
 
         $this->assertNull($this->logInfoGit->getRelease());
     }
+
+    public function testGetReleaseSelectsNewestVersionAcrossMultipleTags(): void
+    {
+        $newerTag = $this->prophesize(Tag::class);
+        $olderTag = $this->prophesize(Tag::class);
+        $newerTag->getName()->willReturn('v1.10.0');
+        $olderTag->getName()->willReturn('v1.9.0');
+        $this->referenceBag->getTags()->willReturn([$newerTag->reveal(), $olderTag->reveal()]);
+
+        $this->assertSame('v1.10.0', $this->logInfoGit->getRelease());
+    }
 }

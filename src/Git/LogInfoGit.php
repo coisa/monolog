@@ -78,6 +78,10 @@ class LogInfoGit
             return null;
         }
 
+        \usort($tags, static function (Tag $left, Tag $right): int {
+            return \version_compare($left->getName(), $right->getName());
+        });
+
         $lastTag = \end($tags);
 
         return $lastTag->getName();
